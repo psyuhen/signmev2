@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="inc/header::header">
+<title th:text="|#{system.company}管理页面|">管理页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h1 th:text="|#{system.company}现场打卡管理页面|">现场打卡管理页面</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<ul class="dashboard-list">
+					<li>
+						<a href="/signmev2/signme.html" target="_blank">
+							<i class="glyphicon glyphicon-hand-right"></i>
+							<span class="yellow">1、</span>打卡页面
+						</a>
+					</li>
+					<li>
+						<a href="/signmev2/signmelist.html" target="_blank">
+							<i class="glyphicon glyphicon-info-sign"></i>
+							<span class="yellow">2、</span>打卡记录
+						</a>
+					</li>
+					<li>
+						<a href="/signmev2/signmeperson.html" target="_blank">
+							<i class="glyphicon glyphicon-user"></i>
+							<span class="yellow">3、</span>打卡人页面
+						</a>
+					</li>
+					<li>
+						<a href="/signmev2/signmesettime.html" target="_blank">
+							<i class="glyphicon glyphicon-cog"></i>
+							<span class="yellow">4、</span>设置页面
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

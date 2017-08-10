@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.signmev2.mapper.system.DatadictMapper">
+	<sql id="queryCondition">
+		<if test="dd_name != null and dd_name != ''">AND dd_name=#{dd_name,jdbcType=VARCHAR}</if>
+		<if test="dd_id != null and dd_id != ''">AND dd_id=#{dd_id,jdbcType=VARCHAR}</if>
+		<if test="dd_text != null and dd_text != ''">AND dd_text=#{dd_text,jdbcType=VARCHAR}</if>
+		<if test="dd_desc != null and dd_desc != ''">AND dd_desc=#{dd_desc,jdbcType=VARCHAR}</if>
+		<if test="dd_flag != null and dd_flag != ''">AND dd_flag=#{dd_flag,jdbcType=INTEGER}</if>
+		<if test="dd_order != null and dd_order != ''">AND dd_order=#{dd_order,jdbcType=INTEGER}</if>
+		<if test="dd_enabled != null and dd_enabled != ''">AND dd_enabled=#{dd_enabled,jdbcType=INTEGER}</if>
+	</sql>
+
+    <!-- 查询字典信息 -->
+	<select id="queryForList" resultType="Datadict" parameterType="Datadict">
+		SELECT dd_name,dd_id,dd_text,dd_desc,dd_flag,dd_order,dd_enabled
+		FROM tbl_datadict
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+    <!-- 查询字典信息 -->
+	<select id="queryForObject" resultType="Datadict" parameterType="Datadict">
+		SELECT dd_name,dd_id,dd_text,dd_desc,dd_flag,dd_order,dd_enabled
+		FROM tbl_datadict
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+	</select>
+	
+	<!-- 插入字典信息 -->
+	<insert id="save" parameterType="Datadict" >
+		INSERT INTO tbl_datadict (dd_name,dd_id,dd_text,dd_desc,dd_flag,dd_order,dd_enabled)
+		VALUES(#{dd_name,jdbcType=VARCHAR},#{dd_id,jdbcType=VARCHAR},#{dd_text,jdbcType=VARCHAR},#{dd_desc,jdbcType=VARCHAR},#{dd_flag,jdbcType=INTEGER},#{dd_order,jdbcType=INTEGER},#{dd_enabled,jdbcType=INTEGER})
+	</insert>
+	
+	<!-- 更新字典信息 -->
+	<update id="update" parameterType="Datadict" >
+		UPDATE tbl_datadict 
+		<set>
+			<if test="dd_id != null">dd_id=#{dd_id,jdbcType=VARCHAR},</if>
+			<if test="dd_text != null">dd_text=#{dd_text,jdbcType=VARCHAR},</if>
+			<if test="dd_desc != null">dd_desc=#{dd_desc,jdbcType=VARCHAR},</if>
+			<if test="dd_flag != null">dd_flag=#{dd_flag,jdbcType=INTEGER},</if>
+			<if test="dd_order != null">dd_order=#{dd_order,jdbcType=INTEGER},</if>
+			<if test="dd_enabled != null">dd_enabled=#{dd_enabled,jdbcType=INTEGER},</if>
+		</set>
+		WHERE dd_name=#{dd_name,jdbcType=VARCHAR}
+	</update>
+</mapper>

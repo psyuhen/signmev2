@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="{base.package}.mapper.{service.package}.{mapper.interface}">
+    <!-- 查询{table.name}信息 -->
+	<select id="query{model.object}" resultType="{model.object}" parameterType="{model.object}">
+		SELECT {field.all}
+		FROM {table.en}
+		<where>
+			{wif.c}
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test='b_order_name == null  and b_order_name == ""'><![CDATA[ORDER BY create_time DESC   ]]></if>
+	</select>
+	
+	<!-- 新增{table.name} -->
+	<insert id="add{model.object}" parameterType="{model.object}" useGeneratedKeys="true" keyProperty="{table.key}">
+		INSERT INTO {table.en} ({field.all})
+		VALUES ({in.field})
+	</insert>
+	
+	<!-- 批量新增{table.name}信息 -->
+	<insert id="addBatch{model.object}" parameterType="{model.object}" useGeneratedKeys="true" keyProperty="{table.key}">
+		INSERT INTO {table.en} ({field.all}) VALUES
+		<foreach item="item" collection="list" separator=",">
+			({bin.field})
+		</foreach>
+	</insert>
+	
+	<!-- 更新{table.name}信息 -->
+	<update id="update{model.object}" parameterType="{model.object}">
+		UPDATE {table.en}
+		<set>
+	      	{u.set}
+		</set>
+		WHERE {table.key} = #{{table.key},jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除{table.name}信息 -->
+	<delete id="delete{model.object}" parameterType="{model.object}">
+		DELETE FROM {table.en} WHERE {table.key} = #{{table.key},jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除{table.name}信息-->
+	<delete id="deleteBatch{model.object}" parameterType="{model.object}">
+		DELETE FROM {table.en} WHERE {table.key} IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.{table.key},jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

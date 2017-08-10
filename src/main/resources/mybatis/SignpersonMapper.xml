@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.signmev2.mapper.system.SignpersonMapper">
+	<sql id="queryCondition">
+		<if test="mac != null and mac != ''">AND mac=#{mac,jdbcType=VARCHAR}</if>
+		<if test="name != null and name != ''">AND name=#{name,jdbcType=VARCHAR}</if>
+	</sql>
+
+    <!-- 查询签到签退人信息 -->
+	<select id="queryForList" resultType="Signperson" parameterType="Signperson">
+		SELECT mac,name
+		FROM tbl_signperson
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+    <!-- 查询签到签退人信息 -->
+	<select id="queryForObject" resultType="Signperson" parameterType="Signperson">
+		SELECT mac,name
+		FROM tbl_signperson
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+	</select>
+	
+	<!-- 插入签到签退人信息 -->
+	<insert id="save" parameterType="Signperson" >
+		INSERT INTO tbl_signperson (mac,name)
+		VALUES(#{mac,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 更新签到签退人信息 -->
+	<update id="update" parameterType="Signperson" >
+		UPDATE tbl_signperson 
+		<set>
+	      	<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+		</set>
+		WHERE mac=#{mac,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除签到签退人信息 -->
+	<delete id="delete" parameterType="Signperson">
+		DELETE FROM tbl_signperson
+		<where>
+			<if test="mac != null">AND mac=#{mac,jdbcType=VARCHAR}</if>
+			<if test="name != null">AND name=#{name,jdbcType=VARCHAR}</if>
+		</where>
+	</delete>
+</mapper>

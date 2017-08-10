@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title th:text="#{header.title}"></title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" th:href="@{/css/tether/v1.3.3/tether.min.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap/v4/bootstrap.min.css}" />
+<script th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/tether/v1.3.3/tether.min.js}"></script>
+<script th:src="@{/js/bootstrap/v4/bootstrap.min.js}"></script>
+<style type="text/css" th:inline="css">
+	.btnstyle{
+		width: 300px;
+		height: 130px;
+		font-size: 30px;
+		cursor: pointer;
+		font-family: "Consolas"";
+	}
+	button{
+		cursor: pointer;
+	}
+	
+	/*表头样式*/
+	table.dataTable thead {
+		/* background-color: #2fa4e7; */
+		color: #ffffff;
+		background-color: #2fa4e7;
+		border-color: #2fa4e7;
+		border-bottom: 1px solid #178acc;
+		background-image: -webkit-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+		background-image: -o-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+		background-image: linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+		background-repeat: no-repeat;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff54b4eb', endColorstr='#ff1d9ce5', GradientType=0);
+		filter: none;
+	}
+	/*强制文字不换行*/
+	table.dataTable thead th {
+		white-space: nowrap;
+		text-align: center;
+	}
+	
+	table.dataTable tbody td {
+		white-space: nowrap;
+	}
+	/*行hover时的样式*/
+	table.dataTable.hover tr:hover {
+		outline: #A3C5FC solid 1px;
+		outline: -webkit-focus-ring-color auto 5px;
+	}
+	/*表格显示加载中的样式*/
+	.dataTables_processing {
+		background-color: #d6e9c6;
+		color: #468847;
+		font-weight: bold;
+	}
+	.ch-container {
+	    padding: 0 15px;
+	}
+	
+	.green {
+	    color: #458746;
+	}
+	
+	.red {
+	    color: #B94846;
+	}
+	
+	.blue {
+	    color: #3986AC;
+	}
+	
+	.yellow {
+	    color: #F99406;
+	}
+
+	@font-face {
+	  font-family: 'Glyphicons Halflings';
+	
+	  src: url('[[@{/css/fonts/glyphicons-halflings-regular.eot}]]');
+	  src: url('[[@{/css/fonts/glyphicons-halflings-regular.eot?#iefix}]]') format('embedded-opentype'), url('[[@{/css/fonts/glyphicons-halflings-regular.woff}]]') format('woff'), url('[[@{/css/fonts/glyphicons-halflings-regular.ttf}]]') format('truetype'), url('[[@{/css/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular}]]') format('svg');
+	}
+	.input-group-addon{color:#468847;border-color:#468847;background-color:#dff0d8}
+	.glyphicon{position:relative;top:1px;display:inline-block;font-family:'Glyphicons Halflings';font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+	.glyphicon-search:before{content:"\e003"}
+	.glyphicon-file:before {content: "\e022";}
+	.glyphicon-plus-sign:before {content: "\e081";}
+	.glyphicon-cog:before{content:"\e019"}
+	.glyphicon-user:before{content:"\e008"}
+	.glyphicon-info-sign:before{content:"\e086"}
+	.glyphicon-hand-right:before{content:"\e127"}
+	.glyphicon-ban-circle:before{content:"\e090"}
+	
+	.main-menu > li > a {
+	    border: 1px solid rgba(221, 221, 221, 0.46);
+	}
+	
+	.main-menu > li {
+	    margin-top: 0 !important;
+	}
+	
+	.sidebar-nav .nav-header {
+	    display: block;
+	    padding: 3px 15px;
+	    font-size: 11px;
+	    font-weight: bold;
+	    line-height: 18px;
+	    color: #999999;
+	    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	    text-transform: uppercase;
+	}
+
+	.navbar {
+	    border-radius: 0;
+	}
+	
+	ul.main-menu li:hover {
+	    margin-left: 8px;
+	}
+	
+	ul.main-menu li.active {
+	    margin-left: 8px;
+	}
+	
+	ul.main-menu li.nav-header:hover {
+	    margin-left: 0;
+	}
+	
+	ul.main-menu li:not(.nav-header) {
+	    -webkit-transition: .3s;
+	    -moz-transition: .3s;
+	    -ms-transition: .3s;
+	    -o-transition: .3s;
+	    transition: .3s;
+	}
+	
+	.accordion > ul {
+	    display: none;
+	    margin-left: 10px;
+	}
+	
+	ul.dashboard-list li {
+	    padding: 7px 0;
+	    list-style: none;
+	    border-bottom: 1px solid #EBEBEB;
+	    border-top: 1px solid white;
+	}
+	
+	ul.dashboard-list a:hover {
+	    text-decoration: none;
+	}
+	
+	ul.dashboard-list {
+	    margin: 0;
+	}
+	
+	ul.dashboard-list li a span {
+	    display: inline-block;
+	    font-size: 18px;
+	    font-weight: bold;
+	    margin-right: 10px;
+	    text-align: right;
+	    width: 70px;
+	    zoom: 1;
+	}
+		
+</style>
+</head>
+
+<div th:fragment="datetimepicker">
+	<script th:src='@{/js/moment/moment.min.js}'></script>
+	<script th:src='@{/js/moment/zh-cn.min.js}'></script>
+	<script th:src='@{/js/bootstrap-datetimepicker/v4.17.47/bootstrap-datetimepicker.min.js}'></script>
+	<link rel="stylesheet" th:href="@{/css/bootstrap-datetimepicker/v4.17.47/bootstrap-datetimepicker.min.css}" />
+	<script type="text/javascript" th:inline="javascript">
+		var lang = [[${session["org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE"]}]]
+		lang = $.trim(lang) === "" ? "zh_CN" : lang;
+	</script>
+	<script>
+		$.fn.datetimepicker.defaults.tooltips = {
+			today: '回到今天',
+			clear: '清除选择',
+			close: '关闭',
+			selectMonth: '选择月份',
+			prevMonth: '上一月',
+			nextMonth: '下一月',
+			selectYear: '选择年份',
+			prevYear: '上一年',
+			nextYear: '下一年',
+			selectDecade: '选择十年',
+			prevDecade: '上一十年',
+			nextDecade: '下一十年',
+			prevCentury: '上一世纪',
+			nextCentury: '下一世纪',
+			pickHour: '选择小时',
+			incrementHour: '增加小时',
+			decrementHour: '减小小时',
+			pickMinute: '选择分钟',
+			incrementMinute: '增加分钟',
+			decrementMinute: '减小分钟',
+			pickSecond: '选择秒',
+			incrementSecond: '增加秒',
+			decrementSecond: '减小秒',
+			togglePeriod: '切换世纪',
+			selectTime: '选择时间'
+		};
+	</script>
+</div>
+
+<div th:fragment="dataTables">
+	<link th:href='@{/css/datatable/v1.10.15/dataTables.bootstrap4.min.css}' rel='stylesheet'>
+	<script th:src='@{/js/datatable/v1.10.15/jquery.dataTables.min.js}'></script>
+	<script th:src='@{/js/datatable/v1.10.15/dataTables.bootstrap4.min.js}'></script>
+	<script>
+		$.extend( $.fn.dataTable.defaults, {
+			searching: false
+		} );
+		$.fn.dataTable.ext.errMode = function(s,h,m){}
+	</script>
+</div>
+
+<div th:fragment="noty">
+	<link th:href='@{/css/noty/jquery.noty.css}' rel='stylesheet'>
+    <link th:href='@{/css/noty/noty_theme_default.css}' rel='stylesheet'>
+	<script th:src="@{/js/noty/jquery.noty-1.2.1.min.js}"></script>
+	<script th:src="@{/js/noty/Noty.min.js}"></script>
+</div>
+
+<div th:fragment="common">
+	<script th:src="@{/js/common/StringUtil.js}" ></script>
+	<script th:src="@{/js/common/RenderUtil.js}" ></script>
+	<script th:src="@{/js/common/DateUtil.js}" ></script>
+	<script th:src="@{/js/common/Form.js}" ></script>
+	<script th:src="@{/js/common/Table.js}" ></script>
+	<script th:src="@{/js/common/Download.js}" ></script>
+	<script th:src="@{/js/common/Html.js}" ></script>
+	<script th:src="@{/js/common/Dialog.js}" ></script>
+	<script th:src="@{/js/common/TableSupport.js}" ></script>
+</div>
+
+<div th:fragment="echarts">
+	<script th:src="@{/js/echarts/v3.6.2/echarts.js}" ></script>
+</div>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.signmev2.mapper.system.SignlogMapper">
+	<sql id="queryCondition">
+		<if test="log_id != null and log_id != ''">AND log_id=#{log_id,jdbcType=VARCHAR}</if>
+		<if test="sign_in_date != null and sign_in_date != ''">AND sign_in_date=#{sign_in_date,jdbcType=VARCHAR}</if>
+		<if test="sign_in_start_date != null and sign_in_start_date != ''"><![CDATA[AND sign_in_date>=#{sign_in_start_date,jdbcType=VARCHAR}]]></if>
+		<if test="sign_in_end_date != null and sign_in_end_date != ''"><![CDATA[AND sign_in_date<=#{sign_in_end_date,jdbcType=VARCHAR}]]></if>
+		<if test="sign_in_time != null and sign_in_time != ''">AND sign_in_time=#{sign_in_time,jdbcType=VARCHAR}</if>
+		<if test="ip != null and ip != ''">AND ip=#{ip,jdbcType=VARCHAR}</if>
+		<if test="mac != null and mac != ''">AND mac=#{mac,jdbcType=VARCHAR}</if>
+		<if test="name != null and name != ''">AND name=#{name,jdbcType=VARCHAR}</if>
+		<if test="sign_out_date != null and sign_out_date != ''">AND sign_out_date=#{sign_out_date,jdbcType=VARCHAR}</if>
+		<if test="sign_out_start_date != null and sign_out_start_date != ''"><![CDATA[AND sign_out_date>=#{sign_out_start_date,jdbcType=VARCHAR}]]></if>
+		<if test="sign_out_end_date != null and sign_out_end_date != ''"><![CDATA[AND sign_out_date<=#{sign_out_end_date,jdbcType=VARCHAR}]]></if>
+		<if test="sign_out_time != null and sign_out_time != ''">AND sign_out_time=#{sign_out_date,jdbcType=VARCHAR}</if>
+		<if test="late_time != null and late_time != ''">AND late_time=#{late_time,jdbcType=VARCHAR}</if>
+		<if test="early_time != null and early_time != ''">AND early_time=#{early_time,jdbcType=VARCHAR}</if>
+		<if test="ot_time != null and ot_time != ''">AND ot_time=#{ot_time,jdbcType=VARCHAR}</if>
+		<if test='sign_flag != null and sign_flag == "1"'><![CDATA[ AND sign_in_time > late_time ]]> </if>
+		<if test='sign_flag != null and sign_flag == "2"'><![CDATA[ AND sign_out_time < early_time ]]> </if>
+		<if test='sign_flag != null and sign_flag == "3"'><![CDATA[ AND sign_out_time > ot_time ]]> </if>
+		<if test='sign_flag != null and sign_flag == "4"'><![CDATA[ AND sign_out_date IS NULL ]]> </if>
+		<if test='sign_flag != null and sign_flag == "5"'><![CDATA[ AND sign_in_date IS NULL ]]> </if>
+	</sql>
+
+    <!-- 查询签退签到记录信息 -->
+	<select id="queryForList" resultType="Signlog" parameterType="Signlog">
+		SELECT log_id,sign_in_date,sign_in_time,ip,mac,name,sign_out_date,sign_out_time,late_time,early_time,ot_time
+		FROM tbl_signlog
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+    <!-- 查询签退签到记录信息 -->
+	<select id="queryForObject" resultType="Signlog" parameterType="Signlog">
+		SELECT log_id,sign_in_date,sign_in_time,ip,mac,name,sign_out_date,sign_out_time,late_time,early_time,ot_time
+		FROM tbl_signlog
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+	</select>
+	
+	<!-- 插入签退签到记录信息 -->
+	<insert id="save" parameterType="Signlog"  useGeneratedKeys="true" keyProperty="log_id" >
+		INSERT INTO tbl_signlog (sign_in_date,sign_in_time,ip,mac,name,sign_out_date,sign_out_time,late_time,early_time,ot_time)
+		VALUES(#{sign_in_date,jdbcType=VARCHAR},#{sign_in_time,jdbcType=VARCHAR},#{ip,jdbcType=VARCHAR},#{mac,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},#{sign_out_date,jdbcType=VARCHAR},#{sign_out_time,jdbcType=VARCHAR},#{late_time,jdbcType=VARCHAR},
+		#{early_time,jdbcType=VARCHAR},#{ot_time,jdbcType=VARCHAR})
+	</insert>
+	<!-- 签退-->
+	<update id="updateSignout" parameterType="Signlog"   >
+		UPDATE tbl_signlog SET sign_out_date=#{sign_out_date,jdbcType=VARCHAR}, sign_out_time=#{sign_out_time,jdbcType=VARCHAR}
+		WHERE log_id=#{log_id,jdbcType=VARCHAR}
+	</update>
+</mapper>

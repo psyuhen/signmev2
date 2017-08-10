@@ -1,0 +1,90 @@
+/**
+ * function:
+ * {model.object}Add.js
+ * @author {author}
+ * @createTime {now.time}
+ */
+var {model.object} = function (options){
+	var $this = this;
+	var _oper = options.oper || "add";
+	var _{table.key} = options.{table.key};
+	var _controller_name = "{base.package}.web.{model.package}.{model.object}Controller";
+	var _param_type = "{base.package}.model.{model.package}.{model.object}";
+	
+	/*查询按钮事件初始化*/
+	this.initBtn = function(){
+		/*清空*/
+		$("#btn_reset").on("click", function(){
+			Form.reset("conditionForm");
+		});
+	};
+	
+	/* 字段校验*/
+	function __fieldValidator(){
+		var _field = {};
+
+{jsvalidate.field}	
+		
+		return _field;
+	}
+	
+	/* 提交Form数据*/
+	function __formCommit(e) {
+    	/*阻止默认的form submit*/
+        e.preventDefault();
+        
+        $this.submit(_oper);
+    }
+	
+	//提交
+	this.submit = function(type){
+		ParamCheck.commonSubmit({
+			service_name 	: _controller_name,
+			method_name 	: ("add" === type ? "add{model.object}" : "update{model.object}"),
+			parameter_type  : _param_type,
+			oper_type 		: type,
+			oper_desc 		: ("add" === type ? "新增" : "编辑") + "{table.name}信息",
+			switch_name 	: "{model.object.lowercase}Switch",
+			module_id 		: "{module_id}",
+			check_fields 	: ["{table.key}"],
+			form_id			: "{model.object.lowercase}Form",
+			oparams			: {}
+		});
+	};
+	
+	/* form 校验 */
+	this.formvalidator = function(){
+		var options={
+			formId				: "{model.object.lowercase}Form",
+	        fields				: __fieldValidator(),
+	        successFormFv		: __formCommit
+		};
+		
+		new FormValidator(options);
+	};
+	/* 查询{table.name}信息*/
+	this.queryByKey = function(){
+		tableSupport.get(ctx + "{request.param}/queryByKey", {"{table.key}" : _{table.key}}, function({model.object.lowercase}){
+			Form.setValue({model.object.lowercase});
+		});
+	};
+	
+	function init(){
+		//Form.rptBank("rpt_bank");
+		$this.initBtn();
+		$this.formvalidator();
+		
+		if("add" !== _oper){
+			$this.queryByKey();
+		}
+		
+		if("update" === _oper){
+			$("#{table.key}").attr("readonly", true);
+		}else if("view" === _oper){
+			Form.setDisabled("{model.object.lowercase}Form");
+		}
+	}
+	
+	init();
+};
+

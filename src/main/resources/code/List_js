@@ -1,0 +1,106 @@
+/**
+ * function:
+ * {model.object}List.js
+ * @author {author}
+ * @createTime {now.time}
+ */
+var {model.object}List = function (options){
+	var $this = this;
+	var $dataTable = null;
+	var $rowData = null;
+	var $table = null;
+	var _service_name = "{base.package}.web.{model.package}.{model.object}Controller";
+	var _param_type = "{base.package}.model.{model.package}.{model.object}";
+	var _page = options.page;
+	var _module_id = options.module_id;
+	
+	/*初始化数据表格*/
+	this.initTable = function(){
+		var t = new Table({
+			"table_id"			: "{model.object.lowercase}List",
+			"ordering"			: false,
+			"download"			: {enabled:false},
+			"row_btn_enabled"	: true,
+			"btn_view_callback"	: btnViewEvent,
+			"btn_edit_callback"	: btnEditEvent,
+			"btn_del_callback"	: btnDelEvent,
+			"service_name"		: _service_name,
+			"method_name"		: "query{model.object}",
+			"param_type"		: _param_type,
+			"module_name"		: "{table.name}维护",
+			"url"				: ctx + "{request.param}/query{model.object}Page",
+			"formId"			: "conditionForm",
+			"tableHeaders"		: [{table.title}],
+			"columnNames"		: [{table.render}]
+		});
+		$dataTable = t.getDataTable();
+		$table = t;
+	};
+	
+	/*初始化日期控件*/
+	this.initDateTimePicker = function(){
+		//Form.dateTime("div_start_date", "div_end_date", 'YYYY-MM-DD');
+	};
+	
+	/* 查看*/
+	function btnViewEvent($rowData){
+		var {table.key} = $rowData.{table.key};
+		window.location.href = ctx + "{request.param}/view?{table.key}=" + {table.key} + "&page=" + _page + "&module_id=" + _module_id;
+	}
+	
+	/* 编辑*/
+	function btnEditEvent($rowData){
+		var {table.key} = $rowData.{table.key};
+		window.location.href = ctx + "{request.param}/update?page=mgr&{table.key}=" + {table.key} + "&module_id=" + _module_id;
+	}
+	
+	/* 删除*/
+	function btnDelEvent($rowData){
+		btnDelCallback($rowData);
+	}
+	
+	/*查询按钮事件初始化*/
+	this.initBtn = function(){
+		/*查询*/
+		$("#btn_search").on("click", function(){
+			$dataTable.ajax.reload();
+		});
+		
+		/*清空*/
+		$("#btn_reset").on("click", function(){
+			Form.reset("conditionForm");
+		});
+	};
+	
+	/* 删除*/
+	function btnDelCallback(rowdata){
+		var params = [
+		    ParamCheck.initChkObj("{table.key}", "{table.key.name}", rowdata.{table.key})
+		];
+		
+		ParamCheck.commonSubmit({
+			service_name : _service_name,
+			method_name : "delete{model.object}",
+			parameter_type : _param_type,
+			oper_type : "delete",
+			oper_desc : "删除{table.name}信息",
+			switch_name : "{model.object.lowercase}Switch",
+			module_id : "{module_id}",
+			check_fields : ["{table.key}"],
+			params : params,
+			success : function(){
+				$("#btn_search").click();
+			}
+		});
+	}
+	
+	function init(){
+		$this.initTable();
+		$this.initDateTimePicker();
+		$this.initBtn();
+	}
+	
+	init();
+};
+
+

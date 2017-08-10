@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="inc/header::header">
+<title th:text="|#{system.company}现场人员签到页面|">现场人员签到页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="container text-center">
+		<div class="row">
+			<div class="col">
+				<h1 th:text="|#{system.company}现场人员签到页面|">现场人员签到页面</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<form action="/signmev2/signme" th:action="${signtype=='2'}?'/signmev2/signmeout':'/signmev2/signme'" method="post" >
+					<button type="submit" class="btn btn-primary btn-lg btnstyle" th:text="#{signme.in}" ></button>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<span style="font-size: 30px;color: blue;" th:if="${signerror != null}" th:text="${signerror}"></span><br/>
+				<span style="font-size: 30px;color: blue;" th:if="${signtime != null}" th:text="|${signname}您好,您${signtype == '2'?'签退时间':'签到时间'}为:${signtime}|"></span>
+			</div>
+		</div>
+	</div>
+	
+	<div th:replace="inc/header::common"></div>
+	<div th:replace="inc/header::echarts"></div>
+	<br/>
+	<hr/>
+	<a href="javascript:void(0);">查看自己的签到情况</a>
+	<div class="container text-center">
+		<div class="row">
+			<div class="col-md-12">
+				<div id="main" style="width: 900px;height:400px;"></div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        
+        var now = DateUtil.local_now();
+        var beforeDay = DateUtil.getDateByDiff(now, -30);
+        
+        //获取两个时间的所有日期
+        var dayList = DateUtil.getDayList(beforeDay,now);
+        console.log(dayList);
+        var $$realData = [];
+        
+        function signtype(signdate,signtime, type){
+        	if(signtime == "000000"){
+        		if(type == "1"){
+        			return "未签到";
+        		}
+        		
+        		if(type == "2"){
+        			return "未签退";
+        		}
+        	}
+        	
+        	for(var i=0,len=$$realData.length;i<len;i++){
+    			var signlog = $$realData[i];
+    			if(signdate == signlog.sign_in_date){
+    				if(type == "1" && signtime > signlog.late_time){
+    					return "迟到"
+    				}
+    				
+    				if(type == "2" && signtime < signlog.early_time){
+    					return "早退"
+    				}
+    				
+    				if(type == "2" && signtime >= signlog.early_time){
+    					return "加班"
+    				}
+    			}
+    		}
+        	
+        	return "正常";
+        }
+
+        function query(startDt, endDt){
+        	var obj = {};
+        	obj.startDt = startDt;
+        	obj.endDt = endDt;
+        	tableSupport.post("/signmev2/mgr/signlog/queryForListByPerson",obj,function(list){
+        		console.log(list);
+        		if(list == null){
+        			return;
+        		}
+        		$$realData = list;
+        		var signindata = [];
+        		var signoutdata = [];
+        		
+        		for(var j=0,length=dayList.length;j<length;j++){
+        			var day = dayList[j];
+        			var found = false;
+        			for(var i=0,len=list.length;i<len;i++){
+            			var signlog = list[i];
+            			if(day == signlog.sign_in_date){
+            				signindata.push(signlog.sign_in_time);
+            				
+            				if($.trim(signlog.sign_out_time) == ""){
+	            				signoutdata.push("000000");
+            				}else{
+            					signoutdata.push(signlog.sign_out_time);
+            				}
+            				found = true;
+            				break;
+            			}
+            		}
+        			
+        			if(!found){
+        				signindata.push("000000");
+        				signoutdata.push("000000");
+        			}
+        		}
+        		console.log(signindata);
+        		console.log(signoutdata);
+        		
+        		// 指定图表的配置项和数据
+                var option = {
+                	    title: {
+                	        text: '近一个月的签到签退情况'
+                	    },
+                	    tooltip: {
+                	        trigger: 'axis',
+                	        formatter: function (params, ticket, callback) {
+                	        	
+                	        	if(params.length == 0){
+                	        		return "";
+                	        	}
+                	        	
+                	        	var axisValue = params[0].axisValue;
+                	        	var seriesName = params[0].seriesName;
+                	        	var value = params[0].value;
+                	        	
+                	        	var tip = "";
+                	        	var lateInfo = "";
+                	        	var signoutInfo = "";
+                	        	if(params.length == 1){
+                	        		if(seriesName == "签到"){
+                	        			lateInfo = signtype(axisValue, value, "1");
+                	        		}else{
+                	        			lateInfo = signtype(axisValue, value, "2");
+                	        		}
+                	        		tip = axisValue + '<br/>' + seriesName + ":" +DateUtil.dateFormat(value, "HH时mm分ss秒")+"("+lateInfo+")"
+                	        		return tip;
+                	        	}
+                	        	
+                	        	axisValue = params[0].axisValue;
+                	        	seriesName = params[0].seriesName;
+                	        	value = params[0].value;
+                	        	var seriesName1 = params[1].seriesName;
+                	        	var value1 = params[1].value;
+                	        	
+                	        	lateInfo = signtype(axisValue, value, "1");
+                	        	signoutInfo = signtype(axisValue, value, "2");
+                	        	
+                	        	tip = axisValue + '<br/>' + seriesName + ":" +DateUtil.dateFormat(value, "HH时mm分ss秒")+"("+lateInfo+")";
+                	        	
+                	        	tip += "<br/>" + seriesName1 + ":" +DateUtil.dateFormat(value1, "HH时mm分ss秒")+"("+signoutInfo+")";
+                	        	
+                	            return tip;
+                	        }
+                	    },
+                	    legend: {
+                	        data:['签到','签退']
+                	    },
+                	    grid: {
+                	        left: '3%',
+                	        right: '4%',
+                	        bottom: '3%',
+                	        containLabel: true
+                	    },
+                	    toolbox: {
+                	        feature: {
+                	            saveAsImage: {}
+                	        }
+                	    },
+                	    xAxis: {
+                	        type: 'category',
+                	        boundaryGap: false,
+                	        data: dayList
+                	    },
+                	    yAxis: {
+                	        type: 'value',
+                	        axisLabel:{
+                	        	formatter:function (value, index) {
+                	        		value += "";
+                	        		value = StringUtil.leftPad(value, 6, "0");
+                	        		return DateUtil.dateFormat(value, "HH:mm:ss")
+                	        	}
+                	        },
+                	        min:"000000",
+                	        max:"240000"
+                	    },
+                	    series: [
+                	        {
+                	            name:'签到',
+                	            type:'line',
+                	            data:signindata
+                	        },
+                	        {
+                	            name:'签退',
+                	            type:'line',
+                	            data:signoutdata
+                	        }
+                	    ]
+                	};
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+        	});
+        }
+        
+        query(beforeDay,now);
+        
+        
+    </script>
+</body>
+</html>
