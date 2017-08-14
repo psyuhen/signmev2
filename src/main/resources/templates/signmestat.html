@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="inc/header::header">
+<title th:text="|#{system.company}现场人员签到页面|">现场人员签到页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="ch-container">
+	    <div class="row">
+	    	<!-- left menu starts -->
+			<!-- <div id="left_menu" class="col-sm-2 col-lg-2" >
+				<div class="row">
+					<div class="input-group col-lg-12">
+						<input placeholder="" th:placeholder="#{btn_search}" class="form-control" name="query" id="searchMenuTree" type="text">
+						<span class="input-group-addon" style="cursor: pointer;" title="" th:title="#{btn_search}">
+							<i class="glyphicon glyphicon-search red" id="searching"></i>
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div id="menu_list" class="col-lg-12" style="padding: 0px;overflow: auto;">
+						<div class="sidebar-nav">
+							<div class="nav-canvas">
+								<div class="nav-sm nav nav-stacked"></div>
+								<ul class="nav nav-pills nav-stacked main-menu" id="Module">
+									<li class="accordion">
+										<a href="javascript:void(0);">
+											<i class="glyphicon glyphicon-file"></i>
+											<span>签到签退记录</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<!--/span-->
+			<!-- left menu ends -->
+	    	<!-- 右侧 -->
+	        <div id="content" class="col-lg-12 col-sm-12">
+	        	<div>
+				    <ul class="breadcrumb">
+				        <li>
+				        	签到签退记录
+				        </li>
+				    </ul>
+	        	</div>
+				<div class="row">
+			        <div class="box col-md-12">
+			            <div class="box-inner">
+							<form id="conditionForm">
+				                <div class="box-content">
+				                	<div class="row">
+				                		<div class="col-md-3">
+				                		    <div class="form-group">
+				                		        <label class="control-label" for="stat_flag" th:text="#{signme.stat_flag}"></label>
+				                		        <select name="stat_flag" class="form-control" id="stat_flag"  th:placeholder="#{signme.stat_flag}">
+				                		        	<option value="">---请选择---</option>
+				                		        	<option value="1">合并查询</option>
+				                		        	<option value="2">明细查询</option>
+				                		        </select>
+				                		    </div>
+				                		</div>
+				                		<div class="col-md-3">
+										    <label class="control-label" th:text="#{signme.in.date}"></label>
+			                        		<div class="row">
+			                        			<div class="col-md-6">
+			                        				<div class="form-group">
+												        <input type="text" name="b_start_date" class="form-control" id="b_start_date"  th:placeholder="#{signme.in.start.date}" th:value="${#calendars.format(#calendars.createToday(),'yyyyMMdd')}"/>
+												    </div>
+			                        			</div>
+			                        			<div class="col-md-6">
+			                        				<div class="form-group">
+												        <input type="text" name="b_end_date" class="form-control" id="b_end_date"  th:placeholder="#{signme.in.end.date}" th:value="${#calendars.format(#calendars.createToday(),'yyyyMMdd')}" />
+												    </div>
+			                        			</div>
+			                        		</div>
+				                		</div>
+				                	    <div class="col-md-3">
+				                		    <div class="form-group">
+				                		        <label class="control-label" for="name" th:text="#{signme.name}"></label>
+				                		        <input type="text" name="name" class="form-control" id="name" placeholder="" th:placeholder="#{signme.name}" />
+				                		    </div>
+				                		</div>
+				                		<div class="col-md-3">
+				                		    <div class="form-group">
+				                		        <label class="control-label" for="mac" th:text="#{signme.mac}"></label>
+				                		        <input type="text" name="mac" class="form-control" id="mac"  th:placeholder="#{signme.mac}" />
+				                		    </div>
+				                		</div>
+				                	</div>
+				                </div>
+			                </form>
+			                
+			            	<div class="modal-footer">
+							    <button type="button" id="btn_search" class="btn btn-primary">
+							    	<i class="glyphicon glyphicon-search" ></i>
+							    	查询
+							    </button>
+							    <button type="button" id="btn_reset" class="btn btn-primary">
+							    	<i class="glyphicon glyphicon-remove" ></i>
+							    	清空
+							    </button>
+					        </div>
+			            </div>
+			        </div>
+			        <!--/span-->
+			    </div><!--/row-->
+			    <div class="row">
+			    	<div class="box col-md-12">
+			            <div class="box-inner">
+			            	<div class="box-content">
+								<table id="signmeStatList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+								    <thead>
+								        <tr>
+								        </tr>
+								    </thead>
+								</table>
+			            	</div>
+			            </div><!--/box-inner-->
+			        </div>
+			    </div><!--/row-->
+		    </div>
+		</div>
+	
+	    <hr>
+	
+	</div>
+	
+	<div th:replace="inc/header::datetimepicker"></div>
+	<div th:replace="inc/header::dataTables"></div>
+	<div th:replace="inc/header::noty"></div>
+	<div th:replace="inc/header::common"></div>
+	
+	<script th:src='@{/js/signmestat.js}'></script>
+	<script type="text/javascript">
+		new SignmeStatList();
+	</script>
+</body>
+</html>

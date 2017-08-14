@@ -35,7 +35,6 @@ var SignmeList = function (options){
 	this.initBtn = function(){
 		/*查询*/
 		$("#btn_search").on("click", function(){
-			$table.setListMap($("#conditionForm").serializeArray());
 			$dataTable.ajax.reload();
 		});
 		

@@ -38,6 +38,34 @@
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
 	</select>
     <!-- 查询签退签到记录信息 -->
+	<select id="queryUnSign" resultType="Signlog" parameterType="Signlog">
+		SELECT
+			'' as log_id,
+			sign_in_date,
+			sign_in_time,
+			'' as ip,
+			b.mac,
+			b.NAME,
+			'' as sign_out_date,
+			'' as sign_out_time,
+			'' as late_time,
+			'' as early_time,
+			'' as ot_time
+		FROM
+			tbl_signlog a
+		LEFT JOIN tbl_signperson b ON a.mac != b.MAC
+		<where>
+			<if test="sign_in_date != null and sign_in_date != ''">AND a.sign_in_date=#{sign_in_date,jdbcType=VARCHAR}</if>
+			<if test="sign_in_start_date != null and sign_in_start_date != ''"><![CDATA[AND a.sign_in_date>=#{sign_in_start_date,jdbcType=VARCHAR}]]></if>
+			<if test="sign_in_end_date != null and sign_in_end_date != ''"><![CDATA[AND a.sign_in_date<=#{sign_in_end_date,jdbcType=VARCHAR}]]></if>
+			<if test="sign_in_time != null and sign_in_time != ''">AND a.sign_in_time=#{sign_in_time,jdbcType=VARCHAR}</if>
+			<if test="mac != null and mac != ''">AND b.mac=#{mac,jdbcType=VARCHAR}</if>
+			<if test="name != null and name != ''">AND b.name=#{name,jdbcType=VARCHAR}</if>
+		</where>
+		
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+    <!-- 查询签退签到记录信息 -->
 	<select id="queryForObject" resultType="Signlog" parameterType="Signlog">
 		SELECT log_id,sign_in_date,sign_in_time,ip,mac,name,sign_out_date,sign_out_time,late_time,early_time,ot_time
 		FROM tbl_signlog

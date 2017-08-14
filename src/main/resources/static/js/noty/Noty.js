@@ -81,6 +81,6 @@ Noty.popover = function(id, text){
 	popoverObj.focus();
 	
 	setTimeout(function(){
-		popoverObj.popover("destroy");
+		popoverObj.popover("dispose");
 	}, 3000);
 };

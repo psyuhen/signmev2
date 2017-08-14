@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.signmev2.mapper.system.SignmeStatMapper">
+	<sql id="queryCondition">
+		<if test="stat_date != null and stat_date != ''">AND stat_date=#{stat_date,jdbcType=VARCHAR}</if>
+		<if test="b_start_date != null and b_start_date != ''"><![CDATA[AND stat_date>=#{b_start_date,jdbcType=VARCHAR}]]></if>
+		<if test="b_end_date != null and b_end_date != ''"><![CDATA[AND stat_date<=#{b_end_date,jdbcType=VARCHAR}]]></if>
+		<if test="mac != null and mac != ''">AND mac=#{mac,jdbcType=VARCHAR}</if>
+		<if test="name != null and name != ''">AND name=#{name,jdbcType=VARCHAR}</if>
+	</sql>
+
+    <!-- 查询统计签退签到记录信息 -->
+	<select id="queryForList" resultType="SignmeStat" parameterType="SignmeStat">
+		SELECT 
+		<choose>
+			<when test='stat_flag != null and stat_flag =="1"'>
+				'${b_start_date}-${b_end_date}' AS stat_date,
+			</when>
+			<when test='stat_flag != null and stat_flag =="2"'>
+				stat_date,
+			</when>
+			<otherwise>
+				stat_date,
+			</otherwise>
+		</choose>
+		mac,name,sign_in,sign_out,sign_ot
+		FROM tbl_signme_stat
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 查询统计一段时间的签退签到记录信息 -->
+	<select id="queryGroupStat" resultType="SignmeStat" parameterType="SignmeStat">
+		SELECT '${b_start_date}-${b_end_date}' AS stat_date, mac,name,
+		SUM(sign_in) AS sign_in,SUM(sign_out) AS sign_out,SUM(sign_ot) AS sign_ot
+		FROM tbl_signme_stat
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		GROUP BY mac,name
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+    <!-- 查询统计签退签到记录信息 -->
+	<select id="queryForObject" resultType="SignmeStat" parameterType="SignmeStat">
+		SELECT stat_date,mac,name,sign_in,sign_out,sign_ot
+		FROM tbl_signme_stat
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+	</select>
+</mapper>

@@ -51,11 +51,14 @@ public class SignlogController {
 	}
 	@RequestMapping(value = "/signmelink.html")
 	public String signmelink(HttpServletRequest request) {
-		checkSignIn(null,null, request);
 		
 		return "signmelink";
 	}
-	
+	@RequestMapping(value = "/signmelogin.html")
+	public String signmelogin(HttpServletRequest request) {
+		
+		return "signmelogin";
+	}
 	/**
 	 * 查询记录信息(分页)
 	 * @param signlog

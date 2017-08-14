@@ -112,7 +112,6 @@ var SignmePerson = function (options){
 		});
 		
 		$("#btn_search").on("click", function(){
-			$table.setListMap($("#conditionForm").serializeArray());
 			$dataTable.ajax.reload();
 		});
 		

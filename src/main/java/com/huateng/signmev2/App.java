@@ -1,5 +1,7 @@
 package com.huateng.signmev2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -12,6 +14,7 @@ import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.mybatis.xmlhotrefresh.spring.HotDeploySqlSessionFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +24,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -109,6 +113,17 @@ public class App {
     	return mapperScannerConfigurer;
     }
 	
+    
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+    	FilterRegistrationBean frb = new FilterRegistrationBean();
+    	HiddenHttpMethodFilter hhmf = new HiddenHttpMethodFilter();
+    	frb.setFilter(hhmf);
+    	List<String> urlPatterns = new ArrayList<String>();
+    	urlPatterns.add("/signmev2/testput");
+    	frb.setUrlPatterns(urlPatterns);
+    	return frb;
+    }
 	
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
