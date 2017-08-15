@@ -3,6 +3,8 @@
  */
 package com.huateng.signmev2.model.system;
 
+import java.util.List;
+
 import com.huateng.signmev2.model.BaseModel;
 
 import lombok.Getter;
@@ -35,4 +37,6 @@ public class Signlog extends BaseModel{
 	private @Setter @Getter String early_time;
 	private @Setter @Getter String ot_time;
 	private @Setter @Getter String sign_flag;
+	
+	private @Setter @Getter List<String> sign_date_list;
 }

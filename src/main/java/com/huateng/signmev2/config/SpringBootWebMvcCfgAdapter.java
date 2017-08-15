@@ -21,7 +21,7 @@ public class SpringBootWebMvcCfgAdapter extends WebMvcConfigurerAdapter {
 	public void addInterceptors(InterceptorRegistry registry) {
 		String [] notInters= {
 			"/signmev2/signmelogin.html", "/signmev2/login.do", "/signmev2/signme.html","/signmev2/mgr/signlog/queryForListByPerson",
-			"/signmev2/signme","/signmev2/signmeout"
+			"/signmev2/signme","/signmev2/signmeout","/error"
 		};
 		registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns(notInters);
 		super.addInterceptors(registry);

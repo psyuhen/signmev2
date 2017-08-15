@@ -26,12 +26,15 @@ import com.huateng.signmev2.util.DateUtil;
 import com.huateng.signmev2.util.IPUtil;
 import com.huateng.signmev2.util.MacUtil;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 /**
  * @author sam.pan
  *
  */
 @Controller
 @RequestMapping(value = "/signmev2")
+@CommonsLog
 public class SignlogController {
 
 	private @Autowired SignlogService signlogService;
@@ -110,6 +113,10 @@ public class SignlogController {
 			mac = MacUtil.getMac(remoteAddr);
 		}
 		
+		if(StringUtils.isBlank(mac)) {
+			mac = remoteAddr;
+		}
+		
 		
 		String now = DateUtil.today();
 		
@@ -159,7 +166,13 @@ public class SignlogController {
 		if(!isSignIn) {//未签到就插入签到数据
 			Signperson sp = new Signperson();
 			sp.setMac(mac);
-			sp = signpersonService.queryForObject(sp);
+			try {
+				sp = signpersonService.queryForObject(sp);
+			}catch (Exception e) {
+				log.error(e.getMessage(), e);
+				request.setAttribute("signerror", "获取不到签到人信息，无法签到");
+				return "signme";
+			}
 			
 			Datadict dd = new Datadict();
 			dd.setDd_name("LATE_TIME");
@@ -192,6 +205,9 @@ public class SignlogController {
 			if(c > 0) {
 				request.setAttribute("signtype", "1");
 				request.setAttribute("signtime", DateUtil.formatDateString(now+nowtime,"yyyyMMddHHmmss","yyyy年MM月dd日HH时mm分ss秒"));
+				if(nowtime.compareTo(lateTime) > 0) {
+					request.setAttribute("signerror", "您已迟到了");
+				}
 			}else {
 				request.setAttribute("signerror", "签到失败");
 			}

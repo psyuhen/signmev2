@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.huateng.signmev2.mapper.system.SignlogMapper;
 import com.huateng.signmev2.model.system.Signlog;
 import com.huateng.signmev2.service.system.SignlogService;
+import com.huateng.signmev2.util.DateUtil;
 import com.huateng.signmev2.web.page.PageHelper;
 
 /**
@@ -36,6 +37,10 @@ public class SignlogServiceImp extends BaseService<Signlog> implements SignlogSe
 	public List<Signlog> queryForListPage(Signlog t) {
 		if(StringUtils.equals(t.getSign_flag(), "5")) {
 			PageHelper.startPage(t);
+			
+			if(StringUtils.isNotBlank(t.getSign_in_start_date())) {
+				t.setSign_date_list(DateUtil.getDays(t.getSign_in_start_date(), t.getSign_in_end_date()));
+			}
 			return signlogMapper.queryUnSign(t);
 		}
 		

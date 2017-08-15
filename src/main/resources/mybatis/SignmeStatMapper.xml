@@ -10,6 +10,31 @@
 		<if test="b_end_date != null and b_end_date != ''"><![CDATA[AND stat_date<=#{b_end_date,jdbcType=VARCHAR}]]></if>
 		<if test="mac != null and mac != ''">AND mac=#{mac,jdbcType=VARCHAR}</if>
 		<if test="name != null and name != ''">AND name=#{name,jdbcType=VARCHAR}</if>
+		
+		<choose>
+			<when test='sign_in != null and sign_in =="1"'>
+				AND sign_in > 0
+			</when>
+			<when test='sign_in != null and sign_in =="2"'>
+				<![CDATA[AND sign_in <= 0]]>
+			</when>
+		</choose>
+		<choose>
+			<when test='sign_out != null and sign_out =="1"'>
+				AND sign_out > 0
+			</when>
+			<when test='sign_out != null and sign_out =="2"'>
+				<![CDATA[AND sign_out <= 0]]>
+			</when>
+		</choose>
+		<choose>
+			<when test='sign_ot != null and sign_ot =="1"'>
+				AND sign_ot > 0
+			</when>
+			<when test='sign_ot != null and sign_ot =="2"'>
+				<![CDATA[AND sign_ot <= 0]]>
+			</when>
+		</choose>
 	</sql>
 
     <!-- 查询统计签退签到记录信息 -->

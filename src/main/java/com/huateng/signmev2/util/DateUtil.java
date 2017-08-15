@@ -315,6 +315,32 @@ public class DateUtil {
 		return convertMillsToTime(mills);
 	}
 	
+	/**
+	 * 获取两日期所有天数日期
+	 * @param startDate 开始日期
+	 * @param endDate 结束日期
+	 * @return
+	 */
+	public static List<String> getDays(String startDate, String endDate){
+		Date s = parseDate(startDate, "yyyyMMdd");
+		Date e = parseDate(endDate, "yyyyMMdd");
+		
+		int d = getDiffDays(s, e);
+		
+		List<String> list = new ArrayList<String>();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(s);
+		list.add(startDate);
+		for (int i = 0; i < d; i++) {
+			
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+			
+			list.add(format(cal.getTime(),"yyyyMMdd"));
+		}
+		
+		return list;
+	}
+	
 	
 	/**
 	 * 通过日期差，获取时间
