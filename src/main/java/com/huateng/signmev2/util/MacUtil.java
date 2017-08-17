@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,6 +24,13 @@ public class MacUtil {
 	 */
 	public static String getMac(String ip){
 		String mac = "";
+		UdpGetClientMacAddr add = new UdpGetClientMacAddr(ip);
+		mac = add.getRemoteMacAddr();
+		
+		if(StringUtils.isNotBlank(mac)&&!StringUtils.equals(mac, "00-00-00-00-00-00")) {
+			return mac;
+		}
+		
 		InputStreamReader isr = null;
 		BufferedReader inr = null;
 		InputStreamReader isr1 = null;
@@ -67,7 +75,7 @@ public class MacUtil {
 		if("".equals(mac.trim())){
 			return arp(ip);
 		}
-		
+		LOG.info("Get Mac==>"+mac);
 		return mac;
 	}
 	

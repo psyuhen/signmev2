@@ -157,6 +157,9 @@ public class SignlogController {
 		
 		String remoteAddr = IPUtil.getRemoteHost(request);
 		String mac = MacUtil.getMac(remoteAddr);
+		if(StringUtils.isBlank(mac)) {
+			mac = remoteAddr;
+		}
 		
 		String now = DateUtil.today();
 		String nowtime = DateUtil.currentShortTime();
