@@ -122,6 +122,16 @@
 				                		    </div>
 				                		</div>
 				                	</div>
+				                	<div class="row">
+				                		<div class="col-md-4">
+				                			<div class="input-group col-lg-12">
+				                				<input type="text" name="curr_date" class="form-control" id="curr_date"  th:placeholder="批量日期" />
+				                				<span class="input-group-addon" style="cursor: pointer;" title="执行存储过程" >
+													<i class="glyphicon glyphicon-search red" id="procSignmeStat"></i>
+												</span>
+				                			</div>
+				                		</div>
+				                	</div>
 				                </div>
 			                </form>
 			                
@@ -167,7 +177,9 @@
 	
 	<script th:src='@{/js/signmestat.js}'></script>
 	<script type="text/javascript">
-		new SignmeStatList();
+		$(document).ready(function(){
+			new SignmeStatList();
+		});
 	</script>
 </body>
 </html>

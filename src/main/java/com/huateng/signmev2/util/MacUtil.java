@@ -17,20 +17,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MacUtil {
 	private static final Log LOG = LogFactory.getLog(MacUtil.class);
+	
 	/**
-	 * 获取远程Mac地址，此方法只支持window下
-	 * @param ip 远程IP
-	 * @return Mac地址，获取不到返回 ""
+	 * 通过发送nbtstat -a 获取MAC地址
+	 * @param ip
+	 * @return
 	 */
-	public static String getMac(String ip){
+	public static String nbtstat(String ip) {
 		String mac = "";
-		UdpGetClientMacAddr add = new UdpGetClientMacAddr(ip);
-		mac = add.getRemoteMacAddr();
-		
-		if(StringUtils.isNotBlank(mac)&&!StringUtils.equals(mac, "00-00-00-00-00-00")) {
-			return mac;
-		}
-		
 		InputStreamReader isr = null;
 		BufferedReader inr = null;
 		InputStreamReader isr1 = null;
@@ -72,7 +66,37 @@ public class MacUtil {
 			IOUtils.closeStream(inr1);
 		}
 		
-		if("".equals(mac.trim())){
+		return mac;
+	}
+	
+	/**
+	 * 通过发送向计算机137端口发送udp报文获取
+	 * @param ip
+	 * @return
+	 */
+	public static String udp(String ip) {
+		String mac = "";
+		UdpGetClientMacAddr add = new UdpGetClientMacAddr(ip);
+		mac = add.getRemoteMacAddr();
+		return mac;
+	}
+	/**
+	 * 获取远程Mac地址，此方法只支持window下
+	 * @param ip 远程IP
+	 * @return Mac地址，获取不到返回 ""
+	 */
+	public static String getMac(String ip){
+		String mac = "";
+		mac = udp(ip);
+		
+		LOG.info("Get Mac==>"+mac);
+		if(StringUtils.isNotBlank(mac)&&!StringUtils.equals(mac, "00-00-00-00-00-00")) {
+			return mac;
+		}
+		
+		mac = nbtstat(ip);
+		
+		if(StringUtils.isBlank(mac)){
 			return arp(ip);
 		}
 		LOG.info("Get Mac==>"+mac);
@@ -106,7 +130,7 @@ public class MacUtil {
 			IOUtils.closeStream(isr);
 			IOUtils.closeStream(inr);
 		}
-		
+		LOG.info("Get Mac==>"+mac);
 		return mac.trim().toUpperCase();
 	}
 }

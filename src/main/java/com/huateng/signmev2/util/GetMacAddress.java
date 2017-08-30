@@ -128,7 +128,7 @@ public class GetMacAddress {
 	}
 
 	// 做个测试
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		System.out.println(getMacAddress("128.128.166.100"));
-	}
+	}*/
 }

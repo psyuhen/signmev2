@@ -5,10 +5,13 @@ package com.huateng.signmev2.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 /**
  * @author sam.pan
  *
  */
+@CommonsLog
 public class IPUtil {
 	/**
 	 * 获取IP地址
@@ -29,6 +32,7 @@ public class IPUtil {
 			ip = request.getRemoteAddr();
 		}
 		
+		log.info("Get Ip==>" + ip);
 		return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
 	}
 }

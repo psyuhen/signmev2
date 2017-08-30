@@ -12,5 +12,9 @@ import com.huateng.signmev2.model.system.SignmeStat;
  *
  */
 public interface SignmeStatService extends Service<SignmeStat> {
-	
+	/**
+	 * 运行存储过程
+	 * @param curr_date
+	 */
+	public void procSignmeStat(String curr_date);
 }

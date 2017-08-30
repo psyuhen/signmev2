@@ -15,8 +15,8 @@ var SignmeList = function (options){
 			"module_name"	: "用户管理",
 			"url"		: "/signmev2/mgr/signlog/queryForListPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["记录ID","签到日期","签到时间","IP","MAC","姓名","签退日期","签退时间","最迟上班时间","控制签退时间","加班时间"],
-			"columnNames"		: ["log_id",{"sign_in_date":statDateRender},{"sign_in_time":RenderUtil.hour},"ip","mac","name",
+			"tableHeaders"		: ["记录ID","IP","MAC","姓名","签到日期","签到时间","签退日期","签退时间","最迟上班时间","控制签退时间","加班时间"],
+			"columnNames"		: ["log_id","ip","mac","name",{"sign_in_date":statDateRender},{"sign_in_time":RenderUtil.hour},
 				{"sign_out_date":RenderUtil.date},{"sign_out_time":RenderUtil.hour},{"late_time":RenderUtil.hour},
 				{"early_time":RenderUtil.hour},{"ot_time":RenderUtil.hour}]
 		});

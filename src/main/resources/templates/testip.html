@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="inc/header::header">
+<title th:text="|#{system.company}管理页面|">管理页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h1 th:text="|#{system.company}根据IP获取MAC页面|">IP测试页面</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="input-group col-md-4">
+                    <input type="text" class="form-control" id="ip" placeholder="Ip">
+                    <span class="input-group-addon" style="cursor: pointer;" title="" th:title="#{btn_search}">
+						<i class="glyphicon glyphicon-search red" id="searching"></i>
+					</span>
+                </div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col" >
+				<ul class="dashboard-list">
+					<li>
+						<a href="javascript:void(0)" target="_blank">
+							<i class="glyphicon glyphicon-hand-right"></i>
+							<span class="yellow" id="udp">UDP测试:</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)" target="_blank">
+							<i class="glyphicon glyphicon-hand-right"></i>
+							<span class="yellow" id="nbtstat">Nbtstat测试:</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)" target="_blank">
+							<i class="glyphicon glyphicon-hand-right"></i>
+							<span class="yellow" id="arp">ARP测试:</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div th:replace="inc/header::common"></div>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		function msg(id, desc){
+			var $a = $("#"+id).parent();
+			var children = $a.children();
+			$a.empty();
+			$a.append(children);
+			if($.trim(desc) === ""){
+				desc = "获取不到MAC";
+			}
+			$a.append(desc);
+		}
+		
+		$("#searching").on("click",function(){
+			var ip = $("#ip").val();
+			if($.trim(ip) === ""){
+				return ;
+			}
+			console.log(ip);
+			tableSupport.post("/signmev2/testip/udp",{"ip": ip},function(resp){
+				msg("udp", resp.desc);
+			});
+			tableSupport.post("/signmev2/testip/nbtstat",{"ip": ip},function(resp){
+				msg("nbtstat", resp.desc);
+			});
+			tableSupport.post("/signmev2/testip/arp",{"ip": ip},function(resp){
+				msg("arp", resp.desc);
+			});
+		});
+	});
+	</script>
+</body>
+</html>

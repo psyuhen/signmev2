@@ -21,4 +21,10 @@ public interface SignmeStatMapper extends Mapper<SignmeStat> {
 	 * @return
 	 */
 	public List<SignmeStat> queryGroupStat(SignmeStat signmeStat);
+	
+	/**
+	 * 运行存储过程
+	 * @param curr_date
+	 */
+	public void procSignmeStat(String curr_date);
 }

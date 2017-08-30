@@ -35,6 +35,7 @@ var SignmeStatList = function (options){
 	/*初始化日期控件*/
 	this.initDateTimePicker = function(){
 		Form.dateTime("b_start_date","b_end_date");
+		Form.dateTime("curr_date");
 	};
 	
 	
@@ -59,6 +60,20 @@ var SignmeStatList = function (options){
 			}
 			
 			$dataTable.ajax.reload();
+		});
+		
+		$("#procSignmeStat").on("click", function(){
+			var $cd = $("#curr_date");
+			var curr_date = $cd.val();
+			if($.trim(curr_date) == ""){
+				Noty.popover($cd.parent(), "请输入批量日期");
+				$("#curr_date").focus();
+				return;
+			}
+			
+			tableSupport.post("/signmev2/proc/"+curr_date, {}, function(resp){
+				Noty.alert(resp.desc);
+			});
 		});
 		
 		/*清空*/

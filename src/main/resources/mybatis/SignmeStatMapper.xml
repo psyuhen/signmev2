@@ -59,6 +59,11 @@
 		
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
 	</select>
+
+	<!-- 手动调用存储过程统计 -->
+	<select id="procSignmeStat" parameterType="String" statementType="CALLABLE">
+		CALL PROC_SIGNME_STAT(#{curr_date,mode=IN,jdbcType=VARCHAR})
+	</select> 
 	
 	<!-- 查询统计一段时间的签退签到记录信息 -->
 	<select id="queryGroupStat" resultType="SignmeStat" parameterType="SignmeStat">

@@ -42,4 +42,9 @@ public class SignmeStatServiceImp  extends BaseService<SignmeStat> implements Si
 		
 		return super.queryForListPage(t);
 	}
+	
+	@Override
+	public void procSignmeStat(String curr_date) {
+		signmeStatMapper.procSignmeStat(curr_date);
+	}
 }
