@@ -16,6 +16,11 @@
 				<form action="/signmev2/signme" th:action="${signtype=='2'}?'/signmev2/signmeout':'/signmev2/signme'" method="post" >
 					<button type="submit" class="btn btn-primary btn-lg btnstyle" th:text="#{signme.in}" ></button>
 				</form>
+				<div class="pull-right" style="font-size:20px;float:right;margin-top: -100px;">
+					客户端下载:
+					<a href="/signmev2/download.html?f=64" target="_blank">(win64)</a>
+					<a href="/signmev2/download.html?f=jar" target="_blank">(jar)</a>
+				</div>
 				<a href="/signmev2/signmelink.html" target="_blank">
 					<i class="glyphicon glyphicon-list"></i>
 					<span class="yellow"></span>后台入口

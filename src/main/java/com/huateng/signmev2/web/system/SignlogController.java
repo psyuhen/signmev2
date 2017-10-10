@@ -3,12 +3,16 @@
  */
 package com.huateng.signmev2.web.system;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.huateng.signmev2.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +29,6 @@ import com.huateng.signmev2.model.system.Signperson;
 import com.huateng.signmev2.service.system.DatadictService;
 import com.huateng.signmev2.service.system.SignlogService;
 import com.huateng.signmev2.service.system.SignpersonService;
-import com.huateng.signmev2.util.DateUtil;
-import com.huateng.signmev2.util.HttpUtil;
-import com.huateng.signmev2.util.IPUtil;
-import com.huateng.signmev2.util.MacUtil;
 
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -44,7 +44,12 @@ public class SignlogController {
 	private @Autowired SignlogService signlogService;
 	private @Autowired SignpersonService signpersonService;
 	private @Autowired DatadictService datadictService;
-	
+
+	@Value("${client.64.path}")
+	private String client64File;
+	@Value("${client.jar.path}")
+	private String clientJarFile;
+
 	@RequestMapping(value = "/signmelist.html")
 	public String hello(HttpServletRequest request) {
 		return "signmelist";
@@ -71,7 +76,20 @@ public class SignlogController {
 		
 		return "testip";
 	}
-	
+
+	@RequestMapping(value = "/download.html")
+	public void downloadClient(@RequestParam String f, HttpServletRequest request, HttpServletResponse response) {
+
+		File file = null;
+		if(StringUtils.equals(f, "64")){
+			file = new File(client64File);
+		}else if(StringUtils.equals(f, "jar")){
+			file = new File(clientJarFile);
+		}
+
+		IOUtils.download(file, response);
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "/testip/{type}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseInfo> testip(@RequestParam String ip, @PathVariable String type){
