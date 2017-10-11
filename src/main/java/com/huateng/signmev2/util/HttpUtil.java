@@ -19,8 +19,6 @@ public class HttpUtil {
 	 * 
 	 * @param responseInfo
 	 *            响应信息
-	 * @param status
-	 *            响应状态
 	 * @return
 	 */
 	public static ResponseEntity<ResponseInfo> createOkResponse(ResponseInfo responseInfo) {
@@ -37,7 +35,7 @@ public class HttpUtil {
 	 * @param dataObj
 	 *            给前端返回的数据
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> createOkResponse(String status,String desc, Object dataObj) {
 		return createOkResponse(new ResponseInfo(status, desc, dataObj));
@@ -51,7 +49,7 @@ public class HttpUtil {
 	 * @param desc
 	 *            描述信息
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> createOkResponse(String status,String desc) {
 		return createOkResponse(status, desc, null);
@@ -63,7 +61,7 @@ public class HttpUtil {
 	 * @param desc
 	 *            描述信息
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> success(String desc) {
 		return success(desc, null);
@@ -77,7 +75,7 @@ public class HttpUtil {
 	 * @param dataObj
 	 *            给前端返回的数据
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> success(String desc,	Object dataObj) {
 		return createOkResponse(ResponseInfo.SUCCESS, desc, dataObj);
@@ -89,7 +87,7 @@ public class HttpUtil {
 	 * @param desc
 	 *            描述信息
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> failure(String desc) {
 		return failure(desc, null);
@@ -103,7 +101,7 @@ public class HttpUtil {
 	 * @param dataObj
 	 *            给前端返回的数据
 	 * @return
-	 * @see com.bgpublish.domain.ResponseInfo
+	 * @see com.huateng.signmev2.model.ResponseInfo
 	 */
 	public static ResponseEntity<ResponseInfo> failure(String desc,	Object dataObj) {
 		return createOkResponse(ResponseInfo.FAILURE, desc, dataObj);

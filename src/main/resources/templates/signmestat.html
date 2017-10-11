@@ -91,7 +91,7 @@
 				                		</div>
 				                	</div>
 				                	<div class="row">
-				                		<div class="col-md-4">
+				                		<div class="col-md-2">
 				                		    <div class="form-group">
 				                		        <label class="control-label" for="sign_in" th:text="#{signme.sign_in}"></label>
 				                		        <select name="sign_in" class="form-control" id="sign_in"  th:placeholder="#{signme.sign_in}">
@@ -101,7 +101,7 @@
 				                		        </select>
 				                		    </div>
 				                		</div>
-				                		<div class="col-md-4">
+				                		<div class="col-md-2">
 				                		    <div class="form-group">
 				                		        <label class="control-label" for="sign_out" th:text="#{signme.sign_out}"></label>
 				                		        <select name="sign_out" class="form-control" id="sign_out"  th:placeholder="#{signme.sign_out}">
@@ -111,7 +111,7 @@
 				                		        </select>
 				                		    </div>
 				                		</div>
-				                		<div class="col-md-4">
+				                		<div class="col-md-2">
 				                		    <div class="form-group">
 				                		        <label class="control-label" for="sign_ot" th:text="#{signme.sign_ot}"></label>
 				                		        <select name="sign_ot" class="form-control" id="sign_ot"  th:placeholder="#{signme.sign_ot}">
@@ -120,6 +120,26 @@
 				                		        	<option value="2">未加班</option>
 				                		        </select>
 				                		    </div>
+				                		</div>
+				                		<div class="col-md-2">
+				                		    <div class="form-group">
+				                		        <label class="control-label" for="sign_late" th:text="#{signme.sign_late}"></label>
+				                		        <select name="sign_late" class="form-control" id="sign_late"  th:placeholder="#{signme.sign_late}">
+				                		        	<option value="">---请选择---</option>
+				                		        	<option value="1">迟到</option>
+				                		        	<option value="2">未迟到</option>
+				                		        </select>
+				                		    </div>
+				                		</div>
+				                		<div class="col-md-2">
+											<div class="form-group">
+												<label class="control-label" for="sign_holiday" th:text="#{signme.sign_holiday}"></label>
+												<select name="sign_holiday" class="form-control" id="sign_holiday"  th:placeholder="#{signme.sign_holiday}">
+													<option value="">---请选择---</option>
+													<option value="1">排除</option>
+													<option value="2">不排除</option>
+												</select>
+											</div>
 				                		</div>
 				                	</div>
 				                	<div class="row">

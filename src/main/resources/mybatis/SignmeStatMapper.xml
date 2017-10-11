@@ -35,6 +35,19 @@
 				<![CDATA[AND sign_ot <= 0]]>
 			</when>
 		</choose>
+		<choose>
+			<when test='sign_late != null and sign_late =="1"'>
+				AND sign_late > 0
+			</when>
+			<when test='sign_late != null and sign_late =="2"'>
+				<![CDATA[AND sign_late <= 0]]>
+			</when>
+		</choose>
+		<choose>
+			<when test='sign_holiday != null and sign_holiday =="1"'>
+				AND stat_date NOT IN (SELECT holiday FROM tbl_holiday where flag='0')
+			</when>
+		</choose>
 	</sql>
 
     <!-- 查询统计签退签到记录信息 -->
@@ -51,7 +64,7 @@
 				stat_date,
 			</otherwise>
 		</choose>
-		mac,name,sign_in,sign_out,sign_ot
+		mac,name,sign_in,sign_out,sign_ot,sign_late
 		FROM tbl_signme_stat
 		<where>
 			<include refid="queryCondition"></include>
@@ -68,7 +81,7 @@
 	<!-- 查询统计一段时间的签退签到记录信息 -->
 	<select id="queryGroupStat" resultType="SignmeStat" parameterType="SignmeStat">
 		SELECT '${b_start_date}-${b_end_date}' AS stat_date, mac,name,
-		SUM(sign_in) AS sign_in,SUM(sign_out) AS sign_out,SUM(sign_ot) AS sign_ot
+		SUM(sign_in) AS sign_in,SUM(sign_out) AS sign_out,SUM(sign_ot) AS sign_ot, SUM(sign_late) AS sign_late
 		FROM tbl_signme_stat
 		<where>
 			<include refid="queryCondition"></include>
@@ -79,7 +92,7 @@
 	
     <!-- 查询统计签退签到记录信息 -->
 	<select id="queryForObject" resultType="SignmeStat" parameterType="SignmeStat">
-		SELECT stat_date,mac,name,sign_in,sign_out,sign_ot
+		SELECT stat_date,mac,name,sign_in,sign_out,sign_ot,sign_late
 		FROM tbl_signme_stat
 		<where>
 			<include refid="queryCondition"></include>

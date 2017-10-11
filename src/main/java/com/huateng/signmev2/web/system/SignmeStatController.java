@@ -38,7 +38,7 @@ public class SignmeStatController {
 	
 	/**
 	 * 查询记录信息(分页)
-	 * @param signlog
+	 * @param signmeStat
 	 * @return
 	 */
 	@ResponseBody

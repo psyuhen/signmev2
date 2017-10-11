@@ -41,9 +41,7 @@ public class SignpersonController {
 	
 	/**
 	 * 查询签到人信息(分页)
-	 * @param account
-	 * @param start
-	 * @param limit
+	 * @param signperson
 	 * @return
 	 */
 	@ResponseBody
@@ -83,7 +81,7 @@ public class SignpersonController {
 	
 	/**
 	 * 添加签到人信息
-	 * @param mac
+	 * @param t
 	 * @return
 	 */
 	@ResponseBody
@@ -109,7 +107,7 @@ public class SignpersonController {
 	}
 	/**
 	 * 编辑签到人信息
-	 * @param mac
+	 * @param t
 	 * @return
 	 */
 	@ResponseBody

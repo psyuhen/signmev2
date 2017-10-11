@@ -27,7 +27,7 @@ public class SignmeStat extends BaseModel {
 	private @Setter @Getter String sign_in;
 	private @Setter @Getter String sign_out;
 	private @Setter @Getter String sign_ot;
+	private @Setter @Getter String sign_late;
+	private @Setter @Getter String sign_holiday;
 	private @Setter @Getter String stat_flag;
-	
-	
 }

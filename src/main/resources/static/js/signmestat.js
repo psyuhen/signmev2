@@ -15,8 +15,8 @@ var SignmeStatList = function (options){
 			"module_name"	: "用户管理",
 			"url"		: "/signmev2/mgr/signmestat/queryForListPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["签到日期","MAC","姓名","签到","签退","加班"],
-			"columnNames"		: [{"stat_date":statDateRender},"mac","name","sign_in","sign_out","sign_ot"]
+			"tableHeaders"		: ["签到日期","MAC","姓名","签到","签退","加班","迟到"],
+			"columnNames"		: [{"stat_date":statDateRender},"mac","name","sign_in","sign_out","sign_ot", "sign_late"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
