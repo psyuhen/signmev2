@@ -68,10 +68,10 @@ public class IOUtils {
 			bis = new BufferedInputStream(fis);
 			int i = bis.read(buff);
 			while (i != -1) {
-				os.write(buff, 0, buff.length);
-				os.flush();
+				os.write(buff, 0, i);
 				i = bis.read(buff);
 			}
+			os.flush();
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		} finally {
