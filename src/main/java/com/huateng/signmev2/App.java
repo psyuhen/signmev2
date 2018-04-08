@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.huateng.signmev2.util.SecureUtil;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -62,6 +63,8 @@ public class App {
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		Resource resource = resolver.getResource("classpath:hikari.properties");
 		Properties loadProperties = PropertiesLoaderUtils.loadProperties(resource);
+		String pwd = loadProperties.getProperty("dataSource.password");
+		loadProperties.put("dataSource.password", SecureUtil.desDecode(pwd));
 		HikariConfig hikari = new HikariConfig(loadProperties);
 		return hikari;
 	}

@@ -28,7 +28,6 @@ import com.huateng.signmev2.util.Validator;
  *
  */
 @Controller
-@RequestMapping(value = "/signmev2")
 public class SignpersonController {
 	private static final Log LOGGER = LogFactory.getLog(SignpersonController.class);
 	private @Autowired SignpersonService signpersonService;

@@ -30,4 +30,5 @@ public class SignmeStat extends BaseModel {
 	private @Setter @Getter String sign_late;
 	private @Setter @Getter String sign_holiday;
 	private @Setter @Getter String stat_flag;
+	private @Setter @Getter String top_flag;//1-按迟到倒序，2-按加班倒序
 }

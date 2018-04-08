@@ -16,24 +16,15 @@ var SignmeList = function (options){
 			"url"		: "/signmev2/mgr/signlog/queryForListPage",
 			"formId"			: "conditionForm",
 			"tableHeaders"		: ["记录ID","IP","MAC","姓名","签到日期","签到时间","签退日期","签退时间","最迟上班时间","控制签退时间","加班时间"],
-			"columnNames"		: ["log_id","ip","mac","name",{"sign_in_date":statDateRender},{"sign_in_time":RenderUtil.hour},
-				{"sign_out_date":RenderUtil.date},{"sign_out_time":RenderUtil.hour},{"late_time":RenderUtil.hour},
+			"columnNames"		: ["log_id","ip","mac","name",{"sign_in_date":RenderUtil.statDateRender},{"sign_in_time":RenderUtil.colorLateRender},
+				{"sign_out_date":RenderUtil.date},{"sign_out_time":RenderUtil.colorOutRender},{"late_time":RenderUtil.hour},
 				{"early_time":RenderUtil.hour},{"ot_time":RenderUtil.hour}]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
 	};
 	
-	function statDateRender (data, type, row){
-		if(data.indexOf("-") != -1){
-			var s = data.split("-")[0];
-			var e = data.split("-")[1];
-			return DateUtil.dateFormat(s, "yyyy年MM月dd日")+"至"+DateUtil.dateFormat(e, "yyyy年MM月dd日");
-		}
-		
-		return DateUtil.dateFormat(data, "yyyy年MM月dd日");
-	};
-	
+
 	/*初始化日期控件*/
 	this.initDateTimePicker = function(){
 		Form.dateTime("sign_in_start_date","sign_in_end_date");

@@ -27,19 +27,22 @@
 					<li>
 						<a href="javascript:void(0)" target="_blank">
 							<i class="glyphicon glyphicon-hand-right"></i>
-							<span class="yellow" id="udp">UDP测试:</span>
+							<span class="yellow" style="width: 120px;">UDP测试:</span>
+							<span id="udp" style="width: 200px;"></span>
 						</a>
 					</li>
 					<li>
 						<a href="javascript:void(0)" target="_blank">
 							<i class="glyphicon glyphicon-hand-right"></i>
-							<span class="yellow" id="nbtstat">Nbtstat测试:</span>
+							<span class="yellow" style="width: 120px;">Nbtstat测试:</span>
+							<span id="nbtstat" style="width: 200px;"></span>
 						</a>
 					</li>
 					<li>
 						<a href="javascript:void(0)" target="_blank">
 							<i class="glyphicon glyphicon-hand-right"></i>
-							<span class="yellow" id="arp">ARP测试:</span>
+							<span class="yellow" style="width: 120px;">ARP测试:</span>
+							<span id="arp" style="width: 200px;"></span>
 						</a>
 					</li>
 				</ul>
@@ -51,22 +54,33 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 		function msg(id, desc){
-			var $a = $("#"+id).parent();
-			var children = $a.children();
-			$a.empty();
-			$a.append(children);
-			if($.trim(desc) === ""){
-				desc = "获取不到MAC";
+            var $id = $("#"+id);
+            $id.empty();
+
+            if($.trim(desc) == ""){
+                $id.text("获取不到MAC地址");
+                return;
 			}
-			$a.append(desc);
+            $id.text(desc);
 		}
-		
+
+		function showLoader(id){
+		    var img = '<img src="/signmev2/css/images/ajax-loader.gif">';
+		    var $id = $("#"+id);
+            $id.empty();
+            $id.append(img);
+		}
+
 		$("#searching").on("click",function(){
 			var ip = $("#ip").val();
 			if($.trim(ip) === ""){
+			    Noty.popover("ip", "请输入IP")
 				return ;
 			}
 			console.log(ip);
+            showLoader("udp");
+            showLoader("nbtstat");
+            showLoader("arp");
 			tableSupport.post("/signmev2/testip/udp",{"ip": ip},function(resp){
 				msg("udp", resp.desc);
 			});

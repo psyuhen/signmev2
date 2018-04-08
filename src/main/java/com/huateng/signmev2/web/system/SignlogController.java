@@ -3,24 +3,6 @@
  */
 package com.huateng.signmev2.web.system;
 
-import java.io.File;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.huateng.signmev2.util.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.github.pagehelper.Page;
 import com.huateng.signmev2.model.ResponseInfo;
 import com.huateng.signmev2.model.system.Datadict;
@@ -29,15 +11,29 @@ import com.huateng.signmev2.model.system.Signperson;
 import com.huateng.signmev2.service.system.DatadictService;
 import com.huateng.signmev2.service.system.SignlogService;
 import com.huateng.signmev2.service.system.SignpersonService;
-
+import com.huateng.signmev2.util.*;
 import lombok.extern.apachecommons.CommonsLog;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author sam.pan
  *
  */
 @Controller
-@RequestMapping(value = "/signmev2")
+@RequestMapping(value = "/")
 @CommonsLog
 public class SignlogController {
 
@@ -47,12 +43,22 @@ public class SignlogController {
 
 	@Value("${client.64.path}")
 	private String client64File;
+	@Value("${client.32.path}")
+	private String client32File;
 	@Value("${client.jar.path}")
 	private String clientJarFile;
+
+	@Autowired
+	private Environment env;
 
 	@RequestMapping(value = "/signmelist.html")
 	public String hello(HttpServletRequest request) {
 		return "signmelist";
+	}
+
+	@RequestMapping(value = "")
+	public String index(HttpServletRequest request) {
+		return "forward:/signme.html";
 	}
 	
 	@RequestMapping(value = "/signme.html")
@@ -76,6 +82,17 @@ public class SignlogController {
 		
 		return "testip";
 	}
+	@RequestMapping(value = "/showyourlog.html")
+	public String showyourlog(HttpServletRequest request) {
+
+		return "showyourlog";
+	}
+	@RequestMapping(value = "/p2db.html")
+	public String p2db(HttpServletRequest request) {
+		request.setAttribute("dbPage", env.getProperty("db.page"));
+		request.setAttribute("tftPage", env.getProperty("tft.page"));
+		return "p2db";
+	}
 
 	@RequestMapping(value = "/download.html")
 	public void downloadClient(@RequestParam String f, HttpServletRequest request, HttpServletResponse response) {
@@ -83,6 +100,8 @@ public class SignlogController {
 		File file = null;
 		if(StringUtils.equals(f, "64")){
 			file = new File(client64File);
+		}else if(StringUtils.equals(f, "32")){
+			file = new File(client32File);
 		}else if(StringUtils.equals(f, "jar")){
 			file = new File(clientJarFile);
 		}
@@ -93,7 +112,7 @@ public class SignlogController {
 	@ResponseBody
 	@RequestMapping(value = "/testip/{type}", method = RequestMethod.POST)
 	public ResponseEntity<ResponseInfo> testip(@RequestParam String ip, @PathVariable String type){
-		if(StringUtils.isBlank(ip)) {
+		if(isBlank(ip)) {
 			return HttpUtil.success("IP为空");
 		}
 		
@@ -125,7 +144,47 @@ public class SignlogController {
 		
 		return new com.huateng.signmev2.web.page.Page(list);
 	}
-	
+
+	/**
+	 * 查询个人的记录，开放给别人看
+	 * @param signlog 查询条件
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryByMac", method = RequestMethod.POST)
+	public com.huateng.signmev2.web.page.Page queryByMac(Signlog signlog){
+
+		if(isBlank(signlog.getMac())){
+			return null;
+		}
+
+		if(isBlank(signlog.getSign_in_start_date())){
+			return null;
+		}
+
+		if(isBlank(signlog.getSign_in_end_date())){
+			return null;
+		}
+
+		if(isBlank(signlog.getName())){
+			return null;
+		}
+
+		if(isBlank(signlog.getSign_flag())){
+			return null;
+		}
+
+		if(DateUtil.compareToMonth(signlog.getSign_in_start_date(), signlog.getSign_in_end_date(), 1)){
+			log.warn("查询时间超过一个月");
+			return null;
+		}
+
+		signlog.setLimit(100);
+
+		Page<Signlog> signlogList = (Page<Signlog>)this.signlogService.queryForListPage(signlog);
+		return new com.huateng.signmev2.web.page.Page(signlogList);
+	}
+
 	/**
 	 * 查询一段时间记录信息
 	 * @param startDt
@@ -138,7 +197,7 @@ public class SignlogController {
 		String remoteAddr = IPUtil.getRemoteHost(request);
 		String mac = MacUtil.getMac(remoteAddr);
 		
-		if(StringUtils.isBlank(mac)) {
+		if(isBlank(mac)) {
 			mac = remoteAddr;
 		}
 		
@@ -161,7 +220,7 @@ public class SignlogController {
 	 * @return
 	 */
 	private Signperson checkSignperson(String mac) {
-		if(StringUtils.isBlank(mac)) {
+		if(isBlank(mac)) {
 			mac = "UNKNOWN";
 		}
 		
@@ -178,19 +237,29 @@ public class SignlogController {
 	
 	//检查是否签到
 	private boolean checkSignIn(String remoteAddr, String mac, HttpServletRequest request) {
-		if(StringUtils.isBlank(remoteAddr)) {
+		if(isBlank(remoteAddr)) {
 			remoteAddr = IPUtil.getRemoteHost(request);
 		}
 		
-		if(StringUtils.isBlank(mac)) {
+		if(isBlank(mac)) {
 			mac = MacUtil.getMac(remoteAddr);
 		}
 		
-		if(StringUtils.isBlank(mac)) {
-			mac = remoteAddr;
+
+		if(isBlank(mac)) {
+			request.setAttribute("signtype", "1");
+			request.setAttribute("signerror", "获取不到Mac地址,请下载客户端签到签退！");
+			return false;
 		}
-		
-		
+
+		//先检查一下签到人有没有配置映射表了
+		final Signperson signperson = checkSignperson(mac);
+		if(signperson == null){
+			request.setAttribute("signtype", "1");
+			request.setAttribute("signerror", "根据MAC地址找不到打卡人信息,请先配置签到人信息");
+			return false;
+		}
+
 		String now = DateUtil.today();
 		
 		Signlog signlog = new Signlog();
@@ -227,17 +296,14 @@ public class SignlogController {
 	@ResponseBody
 	@RequestMapping(value = "/signmemac", method = RequestMethod.POST)
 	public ResponseEntity<ResponseInfo> signmemac(String mac, String remoteAddr){
-		if(StringUtils.isBlank(mac)) {
+		if(isBlank(mac)) {
 			return HttpUtil.failure("MAC地址不能为空");
 		}
 
-		Signperson sp = new Signperson();
-		sp.setMac(mac);
-		try {
-			sp = signpersonService.queryForObject(sp);
-		}catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return HttpUtil.failure("根据MAC地址找不到打卡人信息");
+		//先检查一下签到人有没有配置映射表了
+		final Signperson signperson = checkSignperson(mac);
+		if(signperson == null){
+			return HttpUtil.failure("根据MAC地址找不到打卡人信息,请先配置签到人信息");
 		}
 
 		String now = DateUtil.today();
@@ -268,7 +334,7 @@ public class SignlogController {
 			signlog.setSign_in_time(nowtime);
 			signlog.setIp(remoteAddr);
 			signlog.setMac(mac);
-			signlog.setName((sp==null || StringUtils.isBlank(sp.getName()))? remoteAddr : sp.getName());
+			signlog.setName((signperson==null || isBlank(signperson.getName()))? remoteAddr : signperson.getName());
 			signlog.setLate_time(lateTime);
 			signlog.setEarly_time(earlyTime);
 			signlog.setOt_time(otTime);
@@ -305,15 +371,15 @@ public class SignlogController {
 		
 		String remoteAddr = IPUtil.getRemoteHost(request);
 		String mac = MacUtil.getMac(remoteAddr);
-		if(StringUtils.isBlank(mac)) {
+		if(isBlank(mac)) {
 			request.setAttribute("signtype", "1");
-			request.setAttribute("signerror", "获取不到Mac地址,无法签到！");
+			request.setAttribute("signerror", "获取不到Mac地址,请下载客户端签到签退！");
 			return "signme";
 		}
 		
 		if(checkSignperson(mac) == null) {
 			request.setAttribute("signtype", "1");
-			request.setAttribute("signerror", "根据Mac["+mac+"]获取不到打卡人信息,签到失败");
+			request.setAttribute("signerror", "根据Mac["+mac+"]获取不到打卡人信息,请先配置签到人信息");
 			return "signme";
 		}
 		
@@ -329,7 +395,7 @@ public class SignlogController {
 				sp = signpersonService.queryForObject(sp);
 			}catch (Exception e) {
 				log.error(e.getMessage(), e);
-				request.setAttribute("signerror", "获取不到打卡人信息，无法签到");
+				request.setAttribute("signerror", "获取不到打卡人信息,请先配置签到人信息");
 				return "signme";
 			}
 			
@@ -353,8 +419,8 @@ public class SignlogController {
 			signlog.setSign_in_date(now);
 			signlog.setSign_in_time(nowtime);
 			signlog.setIp(remoteAddr);
-			signlog.setMac(StringUtils.isBlank(mac)?remoteAddr:mac);
-			signlog.setName((sp==null || StringUtils.isBlank(sp.getName()))? remoteAddr : sp.getName());
+			signlog.setMac(isBlank(mac)?remoteAddr:mac);
+			signlog.setName((sp==null || isBlank(sp.getName()))? remoteAddr : sp.getName());
 			signlog.setLate_time(lateTime);
 			signlog.setEarly_time(earlyTime);
 			signlog.setOt_time(otTime);
@@ -401,19 +467,18 @@ public class SignlogController {
 		
 		String remoteAddr = IPUtil.getRemoteHost(request);
 		String mac = MacUtil.getMac(remoteAddr);
-		if(StringUtils.isBlank(mac)) {
-			request.setAttribute("signerror", "获取不到Mac地址,无法签退！");
+		if(isBlank(mac)) {
+			request.setAttribute("signerror", "获取不到Mac地址,请下载客户端签到签退！");
 			return "signme";
 		}
 		
 		
 		if(checkSignperson(mac) == null) {
-			request.setAttribute("signerror", "根据Mac["+mac+"]获取不到打卡人信息,签到失败");
+			request.setAttribute("signerror", "根据Mac["+mac+"]获取不到打卡人信息,请先配置签到人信息");
 			return "signme";
 		}
 		
-		
-		
+
 		String now = DateUtil.today();
 		String nowtime = DateUtil.currentShortTime();
 		

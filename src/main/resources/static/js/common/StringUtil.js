@@ -421,3 +421,11 @@ StringUtil.delHtmlTag = function(str){
 	str = StringUtil.rmNull(str);
 	return str.replace(/<[^>]+>/g, "");
 };
+/**
+ * 从Url的参数中获取对应的值
+ * @param name
+ * @return {string}
+ */
+StringUtil.nameByUrl = function(name){
+	return (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20')
+};

@@ -20,11 +20,18 @@ public interface SignmeStatMapper extends Mapper<SignmeStat> {
 	 * @param signmeStat
 	 * @return
 	 */
-	public List<SignmeStat> queryGroupStat(SignmeStat signmeStat);
+	List<SignmeStat> queryGroupStat(SignmeStat signmeStat);
 	
 	/**
 	 * 运行存储过程
 	 * @param curr_date
 	 */
-	public void procSignmeStat(String curr_date);
+	void procSignmeStat(String curr_date);
+
+	/**
+	 * 前10名迟到排行
+	 * @param signmeStat
+	 * @return
+	 */
+	List<SignmeStat> queryTopLateList(SignmeStat signmeStat);
 }

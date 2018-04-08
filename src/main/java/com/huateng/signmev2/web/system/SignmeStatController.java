@@ -5,14 +5,14 @@ package com.huateng.signmev2.web.system;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.huateng.signmev2.model.system.Signlog;
+import com.huateng.signmev2.util.IPUtil;
+import com.huateng.signmev2.util.MacUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.pagehelper.Page;
 import com.huateng.signmev2.model.ResponseInfo;
@@ -20,12 +20,13 @@ import com.huateng.signmev2.model.system.SignmeStat;
 import com.huateng.signmev2.service.system.SignmeStatService;
 import com.huateng.signmev2.util.HttpUtil;
 
+import java.util.List;
+
 /**
  * @author sam.pan
  *
  */
 @Controller
-@RequestMapping(value = "/signmev2")
 public class SignmeStatController {
 
 	private @Autowired SignmeStatService signmeStatService;
@@ -63,5 +64,24 @@ public class SignmeStatController {
 		}
 		
 		return HttpUtil.success("执行成功");
+	}
+
+	/**
+	 * 查询迟到Top 10
+	 * @param startDt
+	 * @param endDt
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/signlate/top10", method = RequestMethod.POST)
+	public List<SignmeStat> queryForListByPerson(@RequestParam String startDt, @RequestParam String endDt, @RequestParam String topFlag, HttpServletRequest request){
+
+		SignmeStat signmeStat = new SignmeStat();
+		signmeStat.setB_start_date(startDt);
+		signmeStat.setB_end_date(endDt);
+		signmeStat.setTop_flag(topFlag);
+		List<SignmeStat> list = this.signmeStatService.queryTopLateList(signmeStat);
+
+		return list;
 	}
 }

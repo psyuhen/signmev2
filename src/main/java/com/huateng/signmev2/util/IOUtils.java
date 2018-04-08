@@ -36,6 +36,32 @@ public class IOUtils {
 	}
 
 	/**
+	 * 向页面写入json
+	 * @param response 响应请求
+	 * @param json json信息
+	 */
+	private static void writeJson(HttpServletResponse response, String json){
+		OutputStream os = null;
+		OutputStreamWriter osw = null;
+		BufferedWriter bw = null;
+		try{
+			response.setHeader("content-type", "application/json");
+			response.setContentType("application/json");
+
+			os = response.getOutputStream();
+			osw = new OutputStreamWriter(os);
+			bw = new BufferedWriter(osw);
+			bw.write(json);
+			bw.flush();
+		}catch (Exception e){
+			LOGGER.error(e.getMessage(), e);
+		} finally {
+			closeStream(os);
+			closeStream(bw);
+			closeStream(osw);
+		}
+	}
+	/**
 	 * 下载文件
 	 * @param file 文件
 	 * @param response
@@ -44,8 +70,10 @@ public class IOUtils {
 		Assert.notNull(file, "下载的文件对象不能为空");
 
 		String fileName = file.getName();
+		OutputStream os = null;
 		if(!file.exists()){
 			LOGGER.error(fileName+":文件不存在");
+			writeJson(response, fileName+":文件不存在");
 			return;
 		}
 
@@ -61,7 +89,6 @@ public class IOUtils {
 		byte[] buff = new byte[1024];
 		BufferedInputStream bis = null;
 		FileInputStream fis = null;
-		OutputStream os = null;
 		try {
 			os = response.getOutputStream();
 			fis = new FileInputStream(file);
@@ -75,6 +102,7 @@ public class IOUtils {
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		} finally {
+			closeStream(os);
 			closeStream(bis);
 			closeStream(fis);
 		}

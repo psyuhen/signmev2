@@ -29,7 +29,6 @@ import com.huateng.signmev2.util.HttpUtil;
  *
  */
 @Controller
-@RequestMapping(value = "/signmev2")
 public class DatadictController {
 	private static final Log LOGGER = LogFactory.getLog(DatadictController.class);
 	private @Autowired DatadictService datadictService;

@@ -59,6 +59,8 @@ public class MacUtil {
 			LOG.error(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			LOG.error(e.getMessage(), e);
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
 		}finally {
 			IOUtils.closeStream(isr);
 			IOUtils.closeStream(inr);

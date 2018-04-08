@@ -16,20 +16,10 @@ var SignmeStatList = function (options){
 			"url"		: "/signmev2/mgr/signmestat/queryForListPage",
 			"formId"			: "conditionForm",
 			"tableHeaders"		: ["签到日期","MAC","姓名","签到","签退","加班","迟到"],
-			"columnNames"		: [{"stat_date":statDateRender},"mac","name","sign_in","sign_out","sign_ot", "sign_late"]
+			"columnNames"		: [{"stat_date":RenderUtil.statDateRender},"mac","name","sign_in","sign_out","sign_ot", "sign_late"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
-	};
-	
-	function statDateRender (data, type, row){
-		if(data.indexOf("-") != -1){
-			var s = data.split("-")[0];
-			var e = data.split("-")[1];
-			return DateUtil.dateFormat(s, "yyyy年MM月dd日")+"至"+DateUtil.dateFormat(e, "yyyy年MM月dd日");
-		}
-		
-		return DateUtil.dateFormat(data, "yyyy年MM月dd日");
 	};
 	
 	/*初始化日期控件*/

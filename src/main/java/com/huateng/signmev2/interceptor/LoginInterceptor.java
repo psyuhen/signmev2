@@ -32,7 +32,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		String url = requestURI.replace(contextPath, "");
 		if(StringUtils.isBlank(user)) {
 			request.setAttribute("blackUrl", url.concat("?").concat(StringUtils.trimToEmpty(request.getQueryString())));
-        	request.getRequestDispatcher("/signmev2/signmelogin.html").forward(request, response);
+        	request.getRequestDispatcher("/signmelogin.html").forward(request, response);
 			return false;
 		}
 		

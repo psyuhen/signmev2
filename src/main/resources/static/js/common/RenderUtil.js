@@ -169,3 +169,74 @@ RenderUtil.trad_status = function (data, type, row){
     }
     return "";
 };
+
+/**
+ * 格式化签到时间
+ * @param data
+ * @param type
+ * @param row
+ * @return {string}
+ */
+RenderUtil.statDateRender = function (data, type, row){
+    if(data.indexOf("-") != -1){
+        var s = data.split("-")[0];
+        var e = data.split("-")[1];
+        return DateUtil.dateFormat(s, "yyyy年MM月dd日")+"至"+DateUtil.dateFormat(e, "yyyy年MM月dd日");
+    }
+
+    var inDate = DateUtil.dateFormat(data, "yyyy年MM月dd日");
+    var week = "";
+    if(!StringUtil.isBlank(data)){
+        week = "<span class=\"blue\" style=\"font-size: 10px;\">(" + DateUtil.weekFromDate(data) + ")";
+
+        return inDate + week;
+    }
+    return inDate;
+};
+
+/**
+ * 高亮迟到
+ * @param data
+ * @param type
+ * @param row
+ * @return {*}
+ */
+RenderUtil.colorLateRender = function(data, type, row){
+    if(StringUtil.isBlank(data)){
+        return "";
+    }
+
+    var late_time = row.late_time;
+    var cur_time = RenderUtil.hour(data, type, row);
+    if(data > late_time){
+        return '<span class="label-default label label-danger">'+cur_time+'(迟到)</span>';
+    }
+
+    return cur_time;
+};
+
+/**
+ * 高亮加班和早退
+ * @param data
+ * @param type
+ * @param row
+ * @return {*}
+ */
+RenderUtil.colorOutRender = function(data, type, row){
+    if(StringUtil.isBlank(data)){
+        return "";
+    }
+
+    var early_time = row.early_time;
+    var cur_time = RenderUtil.hour(data, type, row);
+    if(data < early_time){
+        return '<span class="label-default label label-warning">'+cur_time+'(早退)</span>';
+    }
+
+    var ot_time = row.ot_time;
+    if(data >= ot_time){
+        return '<span class="label-default label label-success">'+cur_time+'(加班)</span>';
+    }
+
+    return cur_time;
+}

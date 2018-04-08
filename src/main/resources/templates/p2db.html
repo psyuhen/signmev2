@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="inc/header::header">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>P2数据库查看</title>
+</head>
+<body>
+<div class="container" style="width: 100%;margin: 0px;padding: 0px;">
+    <div class="row">
+        <div  class="col-md-12">
+            <iframe id="tft" src="" th:attr="src=${dbPage}" width="100%" height="900px;" style="border: 0px;overflow-y:hidden;overflow-x:auto;">
+
+            </iframe>
+        </div>
+    </div>
+    <div class="row">
+        <div  class="col-md-12">
+            <iframe id="tft" src="" th:attr="src=${tftPage}" width="100%" height="900px;" style="border: 0px;overflow-y:hidden;overflow-x:auto;">
+
+            </iframe>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -161,7 +161,9 @@
 	
 	<script th:src='@{/js/signmelist.js}'></script>
 	<script type="text/javascript">
-		new SignmeList();
+        $(document).ready(function(){
+            new SignmeList();
+        });
 	</script>
 </body>
 </html>

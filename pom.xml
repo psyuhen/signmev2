@@ -4,7 +4,7 @@
 
     <groupId>com.huateng</groupId>
     <artifactId>signmev2</artifactId>
-    <version>1.0</version>
+    <version>1.3.3.3</version>
     <packaging>jar</packaging>
     <!-- <packaging>war</packaging> -->
 
@@ -50,6 +50,7 @@
         <pagehelper.version>5.0.3</pagehelper.version>
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <servlet-api.version>3.1.0</servlet-api.version>
+        <request.version>1.0</request.version>
     </properties>
 
     <parent>
@@ -200,6 +201,25 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!--Http请求包-->
+        <!--<dependency>
+            <groupId>com.huateng</groupId>
+            <artifactId>request</artifactId>
+            <version>${request.version}</version>
+        </dependency>-->
+
+        <!-- slf4j -->
+        <!--<dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j-log4j12.version}</version>
+        </dependency>-->
     </dependencies>
 
     <build>
@@ -259,6 +279,25 @@
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--配置生成源码包-->
+            <plugin>
+                <groupId>com.huateng.doc</groupId>
+                <artifactId>maven-plugin-doc</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <basePackage>helloworld/hi/</basePackage>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- 打包时生成 -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>doc</goal>
                         </goals>
                     </execution>
                 </executions>

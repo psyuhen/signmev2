@@ -47,4 +47,13 @@ public class SignmeStatServiceImp  extends BaseService<SignmeStat> implements Si
 	public void procSignmeStat(String curr_date) {
 		signmeStatMapper.procSignmeStat(curr_date);
 	}
+
+	/**
+	 * 前10名迟到排行
+	 * @param signmeStat
+	 * @return
+	 */
+	public List<SignmeStat> queryTopLateList(SignmeStat signmeStat){
+		return signmeStatMapper.queryTopLateList(signmeStat);
+	}
 }

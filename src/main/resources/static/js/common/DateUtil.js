@@ -420,7 +420,32 @@ DateUtil.getDayList = function(startDate, endDate ,format){
 	}
 	return dayLists;
 };
-
+/**
+ * 输入一个日期字符串，返回该天是周几
+ * @param date 日期字符串
+ * @return str 返回星期几
+ */
+DateUtil.weekFromDate = function (date){
+    var d = DateUtil.str2date(date);//转换为日期
+	var week = d.getDay();
+	switch (week){
+		case 1:
+			return "周一";
+		case 2:
+			return "周二";
+		case 3:
+			return "周三";
+		case 4:
+			return "周四";
+		case 5:
+			return "周五";
+		case 6:
+			return "周六";
+		case 0:
+			return "周日";
+	}
+	return "";
+};
 /**
  * 获取相差mills的time
  * @param date 时间日期（Date类型）
@@ -430,4 +455,118 @@ DateUtil.getDayList = function(startDate, endDate ,format){
 DateUtil.getSubTime = function(date, mills){
 	date = new Date(date - mills);
 	return date.toTimeString().replace(/\s.*$/g,'');
-}
+};
+/**
+ * 获取当前周的周一日期
+ * @param date
+ */
+DateUtil.monday = function (date) {
+    var d = DateUtil.str2date(date);//转换为日期
+	var w = d.getDay(); // 获取周
+    var fri = new Date((1-w) * (3600*24*1000) + d.getTime());
+    return DateUtil.format(fri,"yyyyMMdd");
+};
+/**
+ * 获取当前日期的上周一日期
+ * @param curDate
+ */
+DateUtil.lastmonday = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    var w = d.getDay(); // 获取周
+    var fri = new Date((1-w) * (3600*24*1000) + d.getTime());
+    fri.setDate(fri.getDate() - 7);
+    return DateUtil.format(new Date(fri),"yyyyMMdd");
+};
+/**
+ * 获取当前日期的下周一日期
+ * @param curDate
+ */
+DateUtil.nextmonday = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    var w = d.getDay(); // 获取周
+    var fri = new Date((1-w) * (3600*24*1000) + d.getTime());
+    fri.setDate(fri.getDate() + 7);
+    return DateUtil.format(new Date(fri),"yyyyMMdd");
+};
+/**
+ * 获取当前周的周五日期
+ * @param date
+ */
+DateUtil.friday = function (date) {
+    var d = DateUtil.str2date(date);//转换为日期
+    var w = d.getDay(); // 获取周
+
+    var fri = new Date((5-w) * (3600*24*1000) + d.getTime());
+    return DateUtil.format(fri,"yyyyMMdd");
+};
+/**
+ * 获取当前日期的上周五日期
+ * @param curDate
+ */
+DateUtil.lastfriday = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    var w = d.getDay(); // 获取周
+    var fri = new Date((5-w) * (3600*24*1000) + d.getTime());
+    fri.setDate(fri.getDate() - 7);
+    return DateUtil.format(new Date(fri),"yyyyMMdd");
+};
+/**
+ * 获取当前日期的下周五日期
+ * @param curDate
+ */
+DateUtil.nextfriday = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    var w = d.getDay(); // 获取周
+    var fri = new Date((5-w) * (3600*24*1000) + d.getTime());
+    fri.setDate(fri.getDate() + 7);
+    return DateUtil.format(new Date(fri),"yyyyMMdd");
+};
+/**
+ * 获取当前月的第一天日期
+ */
+DateUtil.firstDay = function () {
+    var now = DateUtil.local_now();
+    now = now.replace(/[0-9]{2}$/, "01");
+    return now;
+};
+/**
+ * 获取上月的第一天日期
+ */
+DateUtil.lastFirstDay = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    d.setMonth(d.getMonth() - 1);
+    d.setDate("1")
+    return DateUtil.format(d,"yyyyMMdd");
+};
+/**
+ * 获取上月的第一天日期
+ */
+DateUtil.nextFirstDay = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    d.setMonth(d.getMonth() + 1);
+    d.setDate("1")
+    return DateUtil.format(d,"yyyyMMdd");
+};
+/**
+ * 获取当前月的最后一天日期
+ */
+DateUtil.lastDay = function () {
+    var date = new Date();
+    date.setMonth(date.getMonth() + 1, 0);//只要是为了获取当前月的最后一天
+    return DateUtil.format(date,"yyyyMMdd");
+};/**
+ * 获取上月的最后一天日期
+ */
+DateUtil.lastLastDay = function (curDate) {
+    var d = DateUtil.str2date(curDate);//转换为日期
+    d.setMonth(d.getMonth(), 0);//只要是为了获取当前月的最后一天
+    return DateUtil.format(d,"yyyyMMdd");
+};
+/**
+ * 获取下月的最后一天日期
+ */
+DateUtil.nextLastDay = function (curDate) {
+    var date = DateUtil.str2date(curDate);//转换为日期
+    date.setMonth(date.getMonth() + 2, 0);//只要是为了获取当前月的最后一天
+    return DateUtil.format(date,"yyyyMMdd");
+};

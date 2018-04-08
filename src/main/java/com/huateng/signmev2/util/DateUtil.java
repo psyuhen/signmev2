@@ -12,8 +12,11 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * 日期处理工具类 
@@ -434,5 +437,36 @@ public class DateUtil {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 比较两日期是否超过month
+	 * @param startDt 开始日期
+	 * @param endDt 结束日期
+	 * @param month 月份
+	 * @return 相差的月数
+	 */
+	public static boolean compareToMonth(String startDt, String endDt, int month){
+		try{
+			final Date start = DateUtils.parseDate(startDt, "yyyyMMdd");
+			final Date end = DateUtils.parseDate(endDt, "yyyyMMdd");
+
+			final String formatPeriod = DurationFormatUtils.formatPeriod(start.getTime(), end.getTime(), "M-d");
+
+			final String[] splits = split(formatPeriod, "-");
+			final int m = Integer.parseInt(splits[0]);
+			final int d = Integer.parseInt(splits[1]);
+			if(m > month){
+				return true;
+			}
+
+			if(month == m && d > 0){
+				return true;
+			}
+
+		}catch (ParseException e){
+			LOGGER.error(e.getMessage(), e);
+		}
+		return false;
 	}
 }

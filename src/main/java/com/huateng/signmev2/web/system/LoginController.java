@@ -22,7 +22,6 @@ import lombok.extern.apachecommons.CommonsLog;
  *
  */
 @Controller
-@RequestMapping(value = "/signmev2")
 @CommonsLog
 public class LoginController {
 

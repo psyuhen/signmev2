@@ -19,6 +19,7 @@
 				<div class="pull-right" style="font-size:20px;float:right;margin-top: -100px;">
 					客户端下载:
 					<a href="/signmev2/download.html?f=64" target="_blank">(win64)</a>
+					<a href="/signmev2/download.html?f=32" target="_blank">(win32)</a>
 					<a href="/signmev2/download.html?f=jar" target="_blank">(jar)</a>
 				</div>
 				<a href="/signmev2/signmelink.html" target="_blank">
@@ -39,13 +40,104 @@
 	<div th:replace="inc/header::echarts"></div>
 	<br/>
 	<hr/>
-	<a href="javascript:void(0);">查看自己的签到情况</a>
-	<div class="container text-center">
+	<a href="#yearTop10">查看年排行榜</a>
+	<div class="container  text-center" >
 		<div class="row">
 			<div class="col-md-12">
-				<div id="main" style="width: 900px;height:400px;"></div>
+				<div id="main" style="width: 1024px;height:400px;"></div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12" style="font-size: 18px;color:green;">
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastLateMonth(this);">上月</span>
+						迟到月排行<span id="latemonth" style="font-size: 10px;color:red;"></span>
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextLateMonth(this);">下月</span>
+					</div>
+					<div class="col-md-12">
+						<div class="box-content">
+							<ul class="dashboard-list" id="latemonthTop10">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12" style="font-size: 18px;color:green;">
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastLateWeek(this);">上周</span>
+                        迟到周排行<span id="lateweek" style="font-size: 10px;color:red;"></span>
+                        <span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextLateWeek(this);">下周</span>
+					</div>
+					<div class="col-md-12">
+						<div class="box-content">
+							<ul class="dashboard-list" id="lateweekTop10">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12" style="font-size: 18px;color:green;">
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastOtMonth(this);">上月</span>
+						加班月排行<span id="otmonth" style="font-size: 10px;color:red;"></span>
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextOtMonth(this);">下月</span>
+					</div>
+					<div class="col-md-12">
+						<div class="box-content">
+							<ul class="dashboard-list" id="otmonthTop10">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12" style="font-size: 18px;color:green;">
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastOtWeek(this);">上周</span>
+						加班周排行<span id="otweek" style="font-size: 10px;color:red;"></span>
+						<span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextOtWeek(this);">下周</span>
+					</div>
+					<div class="col-md-12">
+						<div class="box-content">
+							<ul class="dashboard-list" id="otweekTop10">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="row" id="yearTop10">
+            <div class="col-md-6">
+                <div class="col-md-12" style="font-size: 18px;color:green;">
+                    <span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastLateYear(this);">上年</span>
+                    迟到年排行<span id="lateyear" style="font-size: 10px;color:red;"></span>
+                    <span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextLateYear(this);">下年</span>
+                </div>
+                <div class="col-md-12">
+                    <div class="box-content">
+                        <ul class="dashboard-list" id="lateyearTop10">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12" style="font-size: 18px;color:green;">
+                    <span style="font-size: 10px;color: blue;cursor: pointer;" onclick="lastOtYear(this);">上年</span>
+                    加班年排行<span id="otyear" style="font-size: 10px;color:red;"></span>
+                    <span style="font-size: 10px;color: blue;cursor: pointer;" onclick="nextOtYear(this);">下年</span>
+                </div>
+                <div class="col-md-12">
+                    <div class="box-content">
+                        <ul class="dashboard-list" id="otyearTop10">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 	
 	<script type="text/javascript">
@@ -57,7 +149,6 @@
         
         //获取两个时间的所有日期
         var dayList = DateUtil.getDayList(beforeDay,now);
-        console.log(dayList);
         var $$realData = [];
         
         function signtype(signdate,signtime, type){
@@ -96,7 +187,6 @@
         	obj.startDt = startDt;
         	obj.endDt = endDt;
         	tableSupport.post("/signmev2/mgr/signlog/queryForListByPerson",obj,function(list){
-        		console.log(list);
         		if(list == null){
         			return;
         		}
@@ -127,9 +217,7 @@
         				signoutdata.push("000000");
         			}
         		}
-        		console.log(signindata);
-        		console.log(signoutdata);
-        		
+
         		// 指定图表的配置项和数据
                 var option = {
                 	    title: {
@@ -204,6 +292,7 @@
                 	        		return DateUtil.dateFormat(value, "HH:mm:ss")
                 	        	}
                 	        },
+                            splitNumber:7,
                 	        min:"000000",
                 	        max:"240000"
                 	    },
@@ -211,12 +300,22 @@
                 	        {
                 	            name:'签到',
                 	            type:'line',
-                	            data:signindata
+                	            data:signindata,
+                                markLine:{
+                                    data : [
+                                        {name : '上班时间', value : "090000", xAxis: "000000", yAxis: "090000",itemStyle:{normal:{color:'#dc143c',lineStyle:{width:3}}}}
+                                    ]
+								}
                 	        },
                 	        {
                 	            name:'签退',
                 	            type:'line',
-                	            data:signoutdata
+                	            data:signoutdata,
+                                markLine:{
+                                    data : [
+                                        {name : '上班时间', value : "180000", xAxis: "000000", yAxis: "180000",itemStyle:{normal:{color:'#73a839',lineStyle:{width:3}}}}
+                                    ]
+                                }
                 	        }
                 	    ]
                 	};
@@ -225,12 +324,212 @@
                 myChart.setOption(option);
         	});
         }
-        
-        
+
+        function top10(obj, dateTxtId, top10Id, field, signFlag){
+            var $txtId = $("#" + dateTxtId);
+            $txtId.prop("startDt", obj.startDt);
+            $txtId.prop("endDt", obj.endDt);
+            $txtId.prop("title", obj.startDt +"-"+obj.endDt);
+            $txtId.text("("+obj.startDt.substr(4,4) +"-"+obj.endDt.substr(4,4)+")");
+            tableSupport.post("/signmev2/signlate/top10",obj,function(list) {
+                if (list == null) {
+                    return;
+                }
+
+                var html = '<li> <a href="/signmev2/showyourlog.html?mac={TITLE}&name={URLNAME}&startDt={STARTDT}&endDt={ENDDT}&sign_flag={SIGN_FLAG}" target="_blank" title="{TITLE}"> <i class="glyphicon glyphicon-arrow-up"></i> <span class="red">{COUNT}</span> {NAME} </a> </li>';
+
+                var $top = $("#" + top10Id);
+                $top.empty();
+                for(var i=0,len=list.length;i<len;i++){
+                    var signmeStat = list[i];
+                    var $h = html.replace("{COUNT}", signmeStat[field]);
+                    var name = signmeStat.name;
+                    $h = $h.replace("{URLNAME}", encodeURIComponent(name));
+                    $h = $h.replace("{SIGN_FLAG}", signFlag);
+                    if(name.length == 2){
+                        name = name.substring(0,1) + "&nbsp;&nbsp;&nbsp;&nbsp;"+name.substring(1,2);
+                    }else if(name.length == 1){
+                        name = "&nbsp;&nbsp;" + name;
+                    }
+                    $h = $h.replace(/{NAME}/g, name);
+                    $h = $h.replace(/{TITLE}/g, signmeStat.mac);
+                    $h = $h.replace("{STARTDT}", obj.startDt);
+                    $h = $h.replace("{ENDDT}", obj.endDt);
+                    $top.append($h);
+                }
+            });
+		}
+
+        //周top10
+        function weekTop10(startDt, endDt, freshflag){
+            var obj = {};
+            obj.startDt = startDt;
+            obj.endDt = endDt;
+            if(freshflag === 1){
+                obj.topFlag = "1";
+                top10(obj, "lateweek", "lateweekTop10" , "sign_late","1");
+                return;
+			}
+
+			if(freshflag === 2){
+                obj.topFlag = "2";
+                top10(obj, "otweek", "otweekTop10" , "sign_ot", "3");
+                return;
+			}
+
+			if(freshflag === undefined){
+                obj.topFlag = "1";
+                top10(obj, "lateweek", "lateweekTop10" , "sign_late","1");
+                obj.topFlag = "2";
+                top10(obj, "otweek", "otweekTop10" , "sign_ot", "3");
+			}
+		}
+
+        //月top10
+        function monthTop10(startDt, endDt, freshflag){
+            var obj = {};
+            obj.startDt = startDt;
+            obj.endDt = endDt;
+            if(freshflag === 1){
+                obj.topFlag = "1";
+                top10(obj, "latemonth", "latemonthTop10" , "sign_late", "1");
+                return;
+            }
+            if(freshflag === 2){
+                obj.topFlag = "2";
+                top10(obj, "otmonth", "otmonthTop10" , "sign_ot", "3");
+                return;
+            }
+
+            if(freshflag === undefined){
+                obj.topFlag = "1";
+                top10(obj, "latemonth", "latemonthTop10" , "sign_late", "1");
+                obj.topFlag = "2";
+                top10(obj, "otmonth", "otmonthTop10" , "sign_ot", "3");
+            }
+        }
+        //年top10
+        function yearTop10(startDt, endDt, freshflag){
+            var obj = {};
+            obj.startDt = startDt;
+            obj.endDt = endDt;
+            if(freshflag === 1){
+                obj.topFlag = "1";
+                top10(obj, "lateyear", "lateyearTop10" , "sign_late", "1");
+                return;
+            }
+            if(freshflag === 2){
+                obj.topFlag = "2";
+                top10(obj, "otyear", "otyearTop10" , "sign_ot", "3");
+                return;
+            }
+
+            if(freshflag === undefined){
+                obj.topFlag = "1";
+                top10(obj, "lateyear", "lateyearTop10" , "sign_late", "1");
+                obj.topFlag = "2";
+                top10(obj, "otyear", "otyearTop10" , "sign_ot", "3");
+            }
+        }
+
         $(document).ready(function(){
-        	query(beforeDay,now);
+            var now = DateUtil.local_now();
+            query(beforeDay,now);
+            weekTop10(DateUtil.monday(now), DateUtil.friday(now));
+            monthTop10(DateUtil.firstDay(), DateUtil.lastDay());
+
+            var y = now.substr(0, 4) + "0101";
+            var e = now.substr(0, 4) + "1231";
+            yearTop10(y, e);
         });
-        
+
+        function lastLateWeek(obj) {
+            var $lateweek = $("#lateweek");
+            var startDt = $lateweek.prop("startDt");
+            var endDt = $lateweek.prop("endDt");
+            weekTop10(DateUtil.lastmonday(startDt), DateUtil.lastfriday(endDt), 1);
+        }
+        function nextLateWeek(obj) {
+            var $lateweek = $("#lateweek");
+            var startDt = $lateweek.prop("startDt");
+            var endDt = $lateweek.prop("endDt");
+            weekTop10(DateUtil.nextmonday(startDt), DateUtil.nextfriday(endDt), 1);
+        }
+        function lastLateMonth(obj) {
+            var $lateweek = $("#latemonth");
+            var startDt = $lateweek.prop("startDt");
+            var endDt = $lateweek.prop("endDt");
+            monthTop10(DateUtil.lastFirstDay(startDt), DateUtil.lastLastDay(endDt), 1);
+        }
+        function nextLateMonth(obj) {
+            var $lateweek = $("#latemonth");
+            var startDt = $lateweek.prop("startDt");
+            var endDt = $lateweek.prop("endDt");
+            monthTop10(DateUtil.nextFirstDay(startDt), DateUtil.nextLastDay(endDt), 1);
+        }
+
+        function lastLateYear(obj) {
+            var $otweek = $("#lateyear");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            var year = parseInt(startDt.substr(0, 4))-1;
+            var y = (year) + "0101";
+            var e = (year) + "1231";
+            yearTop10(y, e, 1);
+        }
+        function nextLateYear(obj) {
+            var $otweek = $("#lateyear");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            var year = parseInt(startDt.substr(0, 4))+1;
+            var y = (year) + "0101";
+            var e = (year) + "1231";
+            yearTop10(y, e, 1);
+        }
+
+//===================================================================================//
+        function lastOtWeek(obj) {
+            var $otweek = $("#otweek");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            weekTop10(DateUtil.lastmonday(startDt), DateUtil.lastfriday(endDt), 2);
+        }
+        function nextOtWeek(obj) {
+            var $otweek = $("#otweek");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            weekTop10(DateUtil.nextmonday(startDt), DateUtil.nextfriday(endDt), 2);
+        }
+        function lastOtMonth(obj) {
+            var $otweek = $("#otmonth");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            monthTop10(DateUtil.lastFirstDay(startDt), DateUtil.lastLastDay(endDt), 2);
+        }
+        function nextOtMonth(obj) {
+            var $otweek = $("#otmonth");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            monthTop10(DateUtil.nextFirstDay(startDt), DateUtil.nextLastDay(endDt), 2);
+        }
+        function lastOtYear(obj) {
+            var $otweek = $("#otyear");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            var year = parseInt(startDt.substr(0, 4))-1;
+            var y = (year) + "0101";
+            var e = (year) + "1231";
+            yearTop10(y, e, 2);
+        }
+        function nextOtYear(obj) {
+            var $otweek = $("#otyear");
+            var startDt = $otweek.prop("startDt");
+            var endDt = $otweek.prop("endDt");
+            var year = parseInt(startDt.substr(0, 4))+1;
+            var y = (year) + "0101";
+            var e = (year) + "1231";
+            yearTop10(y, e, 2);
+        }
     </script>
 </body>
 </html>

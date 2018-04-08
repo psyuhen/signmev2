@@ -98,4 +98,24 @@
 			<include refid="queryCondition"></include>
 		</where>
 	</select>
+
+    <!-- 周/月统计排行 -->
+	<select id="queryTopLateList" resultType="SignmeStat" parameterType="SignmeStat">
+		SELECT mac, name, SUM(CASE WHEN sign_late =1 THEN 1 ELSE 0 END) sign_late,
+		SUM(CASE WHEN sign_ot =1 THEN 1 ELSE 0 END) sign_ot
+		FROM tbl_signme_stat
+		<where>
+			<include refid="queryCondition"></include>
+		</where>
+		GROUP BY mac, name
+		<choose>
+			<when test='top_flag != null and top_flag == "1"'>
+				ORDER BY sign_late DESC
+			</when>
+			<when test='top_flag != null and top_flag == "2"'>
+				ORDER BY sign_ot DESC
+			</when>
+		</choose>
+		LIMIT 10
+	</select>
 </mapper>
