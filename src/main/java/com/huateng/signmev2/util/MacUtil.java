@@ -10,6 +10,11 @@ import java.io.InputStreamReader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author sam.pan
@@ -89,20 +94,51 @@ public class MacUtil {
 	 */
 	public static String getMac(String ip){
 		String mac = "";
+
+		mac = getRemoteMac(ip);
+		if(isNotBlank(mac)){
+			return mac;
+		}
+
 		mac = udp(ip);
 		
 		LOG.info("Get Mac==>"+mac);
-		if(StringUtils.isNotBlank(mac)&&!StringUtils.equals(mac, "00-00-00-00-00-00")) {
+		if(isNotBlank(mac)&&!StringUtils.equals(mac, "00-00-00-00-00-00")) {
 			return mac;
 		}
 		
 		mac = nbtstat(ip);
-		
-		if(StringUtils.isBlank(mac)){
-			return arp(ip);
+
+		if(isNotBlank(mac)){
+			return mac;
 		}
+
+		mac = arp(ip);
+		if(isNotBlank(mac)){
+			return mac;
+		}
+
 		LOG.info("Get Mac==>"+mac);
 		return mac;
+	}
+
+	/**
+	 * 通过注册服务来获取
+	 * @param ip IP
+	 * @return mac地址
+	 */
+	public static String getRemoteMac(String ip){
+		if(isBlank(ip)){
+			return "";
+		}
+
+		try{
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://"+ip+":13700/", String.class);
+			return responseEntity.getBody();
+		}catch (Exception e){
+			return "";
+		}
 	}
 	
 	/**

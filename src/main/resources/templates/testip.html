@@ -45,6 +45,13 @@
 							<span id="arp" style="width: 200px;"></span>
 						</a>
 					</li>
+					<li>
+						<a href="javascript:void(0)" target="_blank">
+							<i class="glyphicon glyphicon-hand-right"></i>
+							<span class="yellow" style="width: 120px;">远程获取:</span>
+							<span id="remoteserver" style="width: 200px;"></span>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -81,6 +88,7 @@
             showLoader("udp");
             showLoader("nbtstat");
             showLoader("arp");
+            showLoader("remoteserver");
 			tableSupport.post("/signmev2/testip/udp",{"ip": ip},function(resp){
 				msg("udp", resp.desc);
 			});
@@ -89,6 +97,9 @@
 			});
 			tableSupport.post("/signmev2/testip/arp",{"ip": ip},function(resp){
 				msg("arp", resp.desc);
+			});
+			tableSupport.post("/signmev2/testip/remoteserver",{"ip": ip},function(resp){
+				msg("remoteserver", resp.desc);
 			});
 		});
 	});

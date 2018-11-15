@@ -4,7 +4,7 @@
 
     <groupId>com.huateng</groupId>
     <artifactId>signmev2</artifactId>
-    <version>1.3.3.3</version>
+    <version>1.3.3.6</version>
     <packaging>jar</packaging>
     <!-- <packaging>war</packaging> -->
 
@@ -220,10 +220,26 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j-log4j12.version}</version>
         </dependency>-->
+        <!--<dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.10</version>
+        </dependency>-->
     </dependencies>
 
     <build>
         <plugins>
+            <!-- 此插件是方便使用TestNG的-->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -285,7 +301,7 @@
             </plugin>
 
             <!--配置生成源码包-->
-            <plugin>
+            <!--<plugin>
                 <groupId>com.huateng.doc</groupId>
                 <artifactId>maven-plugin-doc</artifactId>
                 <version>1.0</version>
@@ -294,14 +310,14 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- 打包时生成 -->
+                        &lt;!&ndash; 打包时生成 &ndash;&gt;
                         <phase>package</phase>
                         <goals>
                             <goal>doc</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 

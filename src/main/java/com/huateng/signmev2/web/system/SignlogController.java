@@ -47,6 +47,8 @@ public class SignlogController {
 	private String client32File;
 	@Value("${client.jar.path}")
 	private String clientJarFile;
+	@Value("${client.server.path}")
+	private String clientremoteserverFile;
 
 	@Autowired
 	private Environment env;
@@ -104,6 +106,8 @@ public class SignlogController {
 			file = new File(client32File);
 		}else if(StringUtils.equals(f, "jar")){
 			file = new File(clientJarFile);
+		}else if(StringUtils.equals(f, "remoteserver")){
+			file = new File(clientremoteserverFile);
 		}
 
 		IOUtils.download(file, response);
@@ -129,7 +133,11 @@ public class SignlogController {
 		if(StringUtils.equals(type, "arp")) {
 			return HttpUtil.success(MacUtil.arp(ip));
 		}
-		
+
+		if(StringUtils.equals(type, "remoteserver")) {
+			return HttpUtil.success(MacUtil.getRemoteMac(ip));
+		}
+
 		return HttpUtil.failure("未知测试类型");
 	}
 	/**
@@ -174,8 +182,8 @@ public class SignlogController {
 			return null;
 		}
 
-		if(DateUtil.compareToMonth(signlog.getSign_in_start_date(), signlog.getSign_in_end_date(), 1)){
-			log.warn("查询时间超过一个月");
+		if(DateUtil.compareToMonth(signlog.getSign_in_start_date(), signlog.getSign_in_end_date(), 12)){
+			log.warn("查询时间超过12个月");
 			return null;
 		}
 
